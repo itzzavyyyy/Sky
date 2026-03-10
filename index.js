@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits } = require("discord.js");
+const fs = require("fs");
 
 const client = new Client({
   intents: [
@@ -8,40 +9,22 @@ const client = new Client({
   ]
 });
 
-const customCommands = {};
+let customCommands = {};
+
+if (fs.existsSync("./commands.json")) {
+  customCommands = JSON.parse(fs.readFileSync("./commands.json"));
+}
 
 client.once("ready", () => {
   console.log("Aerialphile is online!");
 });
 
-client.on("messageCreate", async (message) => {
+client.on("messageCreate", message => {
   if (message.author.bot) return;
 
   const args = message.content.split(" ");
 
-  // REMINDER COMMAND
-  if (args[0] === "!reminder") {
-    let time = args[1];
-    let text = args.slice(2).join(" ");
-
-    if (!time || !text) {
-      return message.reply("Usage: !reminder 1h Do homework");
-    }
-
-    let ms = 0;
-
-    if (time.endsWith("s")) ms = parseInt(time) * 1000;
-    if (time.endsWith("m")) ms = parseInt(time) * 60000;
-    if (time.endsWith("h")) ms = parseInt(time) * 3600000;
-
-    message.reply(`⏰ Reminder set for ${time}`);
-
-    setTimeout(() => {
-      message.reply(`Reminder: ${text}`);
-    }, ms);
-  }
-
-  // CUSTOM COMMAND CREATE
+  // CREATE CUSTOM COMMAND
   if (args[0] === "!cc") {
     const cmd = args[1];
     const response = args.slice(2).join(" ");
@@ -51,12 +34,16 @@ client.on("messageCreate", async (message) => {
     }
 
     customCommands[cmd] = response;
-    message.reply(`Custom command !${cmd} created`);
+
+    fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
+
+    message.reply(`Custom command !${cmd} saved permanently`);
   }
 
   // RUN CUSTOM COMMAND
-  if (customCommands[args[0].replace("!", "")]) {
-    message.reply(customCommands[args[0].replace("!", "")]);
+  const command = args[0].replace("!", "");
+  if (customCommands[command]) {
+    message.reply(customCommands[command]);
   }
 });
 
