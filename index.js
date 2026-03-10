@@ -34,11 +34,11 @@ client.on("messageCreate", message => {
   if (command === "!help") {
 
     if (!isAdmin) {
-      return message.reply("**Only admins can use this command.**");
+      return message.channel.send("**Only admins can use this command.**");
     }
 
     message.reply(`
-**Aerialphile Bot Commands**
+**Aerialphile Commands**
 
 !cc <name> <response> - Create custom command  
 !cd <name> - Delete custom command  
@@ -50,38 +50,38 @@ client.on("messageCreate", message => {
   // CREATE COMMAND
   if (command === "!cc") {
 
-    if (!isAdmin) return message.reply("**Only admins can add commands.**");
+    if (!isAdmin) return message.channel.send("**Only admins can add commands.**");
 
     const name = args[1];
     const response = args.slice(2).join(" ");
 
     if (!name || !response) {
-      return message.reply("**Usage:** !cc command response");
+      return message.channel.send("**Usage:** !cc command response");
     }
 
     customCommands[name] = response;
 
     fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
 
-    message.reply(`**Command !${name} created.**`);
+    message.channel.send(`**Command !${name} created.**`);
   }
 
   // DELETE COMMAND
   if (command === "!cd") {
 
-    if (!isAdmin) return message.reply("**Only admins can delete commands.**");
+    if (!isAdmin) return message.channel.send("**Only admins can delete commands.**");
 
     const name = args[1];
 
     if (!customCommands[name]) {
-      return message.reply("**Command not found.**");
+      return message.channel.send("**Command not found.**");
     }
 
     delete customCommands[name];
 
     fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
 
-    message.reply(`**Command !${name} deleted.**`);
+    message.channel.send(`**Command !${name} deleted.**`);
   }
 
   // COMMAND LIST
@@ -90,10 +90,10 @@ client.on("messageCreate", message => {
     const list = Object.keys(customCommands);
 
     if (list.length === 0) {
-      return message.reply("**No custom commands created.**");
+      return message.channel.send("**No custom commands created.**");
     }
 
-    message.reply(`**Custom Commands:**\n${list.map(c => `!${c}`).join(", ")}`);
+    message.channel.send(`**Custom Commands:**\n${list.map(c => `!${c}`).join(", ")}`);
   }
 
   // REMINDER
@@ -103,7 +103,7 @@ client.on("messageCreate", message => {
     const text = args.slice(2).join(" ");
 
     if (!time || !text) {
-      return message.reply("**Usage:** !reminder 10m do homework");
+      return message.channel.send("**Usage:** !reminder 10m do homework");
     }
 
     let ms = 0;
@@ -112,7 +112,7 @@ client.on("messageCreate", message => {
     if (time.endsWith("m")) ms = parseInt(time) * 60000;
     if (time.endsWith("h")) ms = parseInt(time) * 3600000;
 
-    message.reply(`**Reminder set for ${time}.**`);
+    message.channel.send(`**Reminder set for ${time}.**`);
 
     setTimeout(() => {
       message.channel.send(`${message.author} **Reminder:** ${text}`);
@@ -123,7 +123,7 @@ client.on("messageCreate", message => {
   const name = command.replace("!", "");
 
   if (customCommands[name]) {
-    message.reply(customCommands[name]);
+    message.channel.send(customCommands[name]);
   }
 
 });
