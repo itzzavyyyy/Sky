@@ -40,17 +40,10 @@ client.on("messageCreate", message => {
     message.reply(`
 **Aerialphile Bot Commands**
 
-**Admin Commands**
 !cc <name> <response> - Create custom command  
 !cd <name> - Delete custom command  
-
-**User Commands**
 !cclist - Show custom commands  
 !reminder <time> <text> - Set reminder
-
-**Example**
-!cc rules Respect everyone
-!reminder 10m check oven
 `);
   }
 
