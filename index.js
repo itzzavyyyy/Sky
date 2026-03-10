@@ -9,6 +9,14 @@ const client = new Client({
   ]
 });
 
+// EMOJIS (change these anytime)
+const EMOJI_SUCCESS = "✅";
+const EMOJI_DELETE = "🗑";
+const EMOJI_ERROR = "❌";
+const EMOJI_REMINDER = "⏰";
+const EMOJI_LIST = "📜";
+const EMOJI_HELP = "📖";
+
 let customCommands = {};
 
 if (fs.existsSync("./commands.json")) {
@@ -34,11 +42,11 @@ client.on("messageCreate", message => {
   if (command === "!help") {
 
     if (!isAdmin) {
-      return message.reply("❌ Only admins can use this command.");
+      return message.reply(`${EMOJI_ERROR} Only admins can use this command.`);
     }
 
     message.reply(`
-📖 **Aerialphile Bot Commands**
+${EMOJI_HELP} **Aerialphile Bot Commands**
 
 👑 **Admin Commands**
 !cc <name> <response> - Create custom command
@@ -47,17 +55,13 @@ client.on("messageCreate", message => {
 👤 **User Commands**
 !cclist - Show custom commands
 !reminder <time> <text> - Set reminder
-
-Example:
-!cc rules Respect everyone
-!reminder 10m check oven
 `);
   }
 
-  // CREATE CUSTOM COMMAND
+  // CREATE COMMAND
   if (command === "!cc") {
 
-    if (!isAdmin) return message.reply("❌ Only admins can add commands.");
+    if (!isAdmin) return message.reply(`${EMOJI_ERROR} Only admins can add commands.`);
 
     const name = args[1];
     const response = args.slice(2).join(" ");
@@ -70,13 +74,13 @@ Example:
 
     fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
 
-    message.reply(`✅ Command !${name} created`);
+    message.reply(`${EMOJI_SUCCESS} Command !${name} created`);
   }
 
   // DELETE COMMAND
   if (command === "!cd") {
 
-    if (!isAdmin) return message.reply("❌ Only admins can delete commands.");
+    if (!isAdmin) return message.reply(`${EMOJI_ERROR} Only admins can delete commands.`);
 
     const name = args[1];
 
@@ -88,10 +92,10 @@ Example:
 
     fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
 
-    message.reply(`🗑 Command !${name} deleted`);
+    message.reply(`${EMOJI_DELETE} Command !${name} deleted`);
   }
 
-  // LIST COMMANDS
+  // COMMAND LIST
   if (command === "!cclist") {
 
     const list = Object.keys(customCommands);
@@ -100,7 +104,7 @@ Example:
       return message.reply("No custom commands created.");
     }
 
-    message.reply(`📜 Commands:\n${list.map(c => `!${c}`).join(", ")}`);
+    message.reply(`${EMOJI_LIST} Commands:\n${list.map(c => `!${c}`).join(", ")}`);
   }
 
   // REMINDER
@@ -119,10 +123,10 @@ Example:
     if (time.endsWith("m")) ms = parseInt(time) * 60000;
     if (time.endsWith("h")) ms = parseInt(time) * 3600000;
 
-    message.reply(`⏰ Reminder set for ${time}`);
+    message.reply(`${EMOJI_REMINDER} Reminder set for ${time}`);
 
     setTimeout(() => {
-      message.reply(`⏰ Reminder: ${text}`);
+      message.channel.send(`${EMOJI_REMINDER} ${message.author} Reminder: ${text}`);
     }, ms);
   }
 
