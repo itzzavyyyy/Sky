@@ -9,14 +9,6 @@ const client = new Client({
   ]
 });
 
-// EMOJIS (change these anytime)
-const EMOJI_SUCCESS = "✅";
-const EMOJI_DELETE = "🗑";
-const EMOJI_ERROR = "❌";
-const EMOJI_REMINDER = "⏰";
-const EMOJI_LIST = "📜";
-const EMOJI_HELP = "📖";
-
 let customCommands = {};
 
 if (fs.existsSync("./commands.json")) {
@@ -42,57 +34,61 @@ client.on("messageCreate", message => {
   if (command === "!help") {
 
     if (!isAdmin) {
-      return message.reply(`${EMOJI_ERROR} Only admins can use this command.`);
+      return message.reply("**Only admins can use this command.**");
     }
 
     message.reply(`
-${EMOJI_HELP} **Aerialphile Bot Commands**
+**Aerialphile Bot Commands**
 
-👑 **Admin Commands**
-!cc <name> <response> - Create custom command
-!cd <name> - Delete custom command
+**Admin Commands**
+!cc <name> <response> - Create custom command  
+!cd <name> - Delete custom command  
 
-👤 **User Commands**
-!cclist - Show custom commands
+**User Commands**
+!cclist - Show custom commands  
 !reminder <time> <text> - Set reminder
+
+**Example**
+!cc rules Respect everyone
+!reminder 10m check oven
 `);
   }
 
   // CREATE COMMAND
   if (command === "!cc") {
 
-    if (!isAdmin) return message.reply(`${EMOJI_ERROR} Only admins can add commands.`);
+    if (!isAdmin) return message.reply("**Only admins can add commands.**");
 
     const name = args[1];
     const response = args.slice(2).join(" ");
 
     if (!name || !response) {
-      return message.reply("Usage: !cc command response");
+      return message.reply("**Usage:** !cc command response");
     }
 
     customCommands[name] = response;
 
     fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
 
-    message.reply(`${EMOJI_SUCCESS} Command !${name} created`);
+    message.reply(`**Command !${name} created.**`);
   }
 
   // DELETE COMMAND
   if (command === "!cd") {
 
-    if (!isAdmin) return message.reply(`${EMOJI_ERROR} Only admins can delete commands.`);
+    if (!isAdmin) return message.reply("**Only admins can delete commands.**");
 
     const name = args[1];
 
     if (!customCommands[name]) {
-      return message.reply("Command not found.");
+      return message.reply("**Command not found.**");
     }
 
     delete customCommands[name];
 
     fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
 
-    message.reply(`${EMOJI_DELETE} Command !${name} deleted`);
+    message.reply(`**Command !${name} deleted.**`);
   }
 
   // COMMAND LIST
@@ -101,10 +97,10 @@ ${EMOJI_HELP} **Aerialphile Bot Commands**
     const list = Object.keys(customCommands);
 
     if (list.length === 0) {
-      return message.reply("No custom commands created.");
+      return message.reply("**No custom commands created.**");
     }
 
-    message.reply(`${EMOJI_LIST} Commands:\n${list.map(c => `!${c}`).join(", ")}`);
+    message.reply(`**Custom Commands:**\n${list.map(c => `!${c}`).join(", ")}`);
   }
 
   // REMINDER
@@ -114,7 +110,7 @@ ${EMOJI_HELP} **Aerialphile Bot Commands**
     const text = args.slice(2).join(" ");
 
     if (!time || !text) {
-      return message.reply("Usage: !reminder 10m do homework");
+      return message.reply("**Usage:** !reminder 10m do homework");
     }
 
     let ms = 0;
@@ -123,10 +119,10 @@ ${EMOJI_HELP} **Aerialphile Bot Commands**
     if (time.endsWith("m")) ms = parseInt(time) * 60000;
     if (time.endsWith("h")) ms = parseInt(time) * 3600000;
 
-    message.reply(`${EMOJI_REMINDER} Reminder set for ${time}`);
+    message.reply(`**Reminder set for ${time}.**`);
 
     setTimeout(() => {
-      message.channel.send(`${EMOJI_REMINDER} ${message.author} Reminder: ${text}`);
+      message.channel.send(`${message.author} **Reminder:** ${text}`);
     }, ms);
   }
 
