@@ -45,7 +45,7 @@ client.once("clientReady", async () => {
   console.log("Aerialphile is online!");
 
   client.user.setPresence({
-  activities: [{ name: "I'm watching you", type: 3 }],
+  activities: [{ name: "I'm watching you!!", type: 3 }],
   status: "online"
   });
 
