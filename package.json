@@ -1,8 +1,10 @@
 {
   "name": "aerialphile",
   "version": "1.0.0",
+  "description": "Aerialphile Discord Bot",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^14.0.0"
+    "discord.js": "^14.14.1",
+    "mongodb": "^6.5.0"
   }
 }
