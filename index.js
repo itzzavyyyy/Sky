@@ -1,6 +1,6 @@
-const { 
-  Client, 
-  GatewayIntentBits, 
+const {
+  Client,
+  GatewayIntentBits,
   PermissionsBitField,
   SlashCommandBuilder,
   PermissionFlagsBits
@@ -20,7 +20,7 @@ const mongo = new MongoClient(process.env.MONGO_URI);
 
 let commands;
 
-// CONNECT DATABASE
+// DATABASE
 async function startDatabase() {
 
   await mongo.connect();
@@ -34,6 +34,7 @@ async function startDatabase() {
 }
 
 startDatabase();
+
 
 // READY EVENT
 client.once("clientReady", async () => {
@@ -50,6 +51,16 @@ client.once("clientReady", async () => {
           .setDescription("Message to send")
           .setRequired(true)
       )
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    new SlashCommandBuilder()
+      .setName("roleusers")
+      .setDescription("Show all users in a role")
+      .addRoleOption(option =>
+        option.setName("role")
+          .setDescription("Select a role")
+          .setRequired(true)
+      )
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
   ];
@@ -58,11 +69,14 @@ client.once("clientReady", async () => {
 
 });
 
-// SLASH COMMAND HANDLER
+
+// SLASH COMMANDS
 client.on("interactionCreate", async interaction => {
 
   if (!interaction.isChatInputCommand()) return;
 
+
+  // SAY
   if (interaction.commandName === "say") {
 
     const text = interaction.options.getString("text");
@@ -76,7 +90,26 @@ client.on("interactionCreate", async interaction => {
 
   }
 
+
+  // ROLE USERS
+  if (interaction.commandName === "roleusers") {
+
+    const role = interaction.options.getRole("role");
+
+    const members = role.members.map(m => m.user.username);
+
+    if (members.length === 0) {
+      return interaction.reply("No users have this role.");
+    }
+
+    const list = members.join("\n");
+
+    interaction.reply(`**Users with ${role.name}:**\n${list}`);
+
+  }
+
 });
+
 
 // MESSAGE COMMANDS
 client.on("messageCreate", async message => {
@@ -93,8 +126,9 @@ client.on("messageCreate", async message => {
     PermissionsBitField.Flags.Administrator
   );
 
+
   // HELP
-  if (command === "!ahelp") {
+  if (command === "!help") {
 
     if (!isAdmin) {
       return message.channel.send("**Only admins can use this command.**");
@@ -104,17 +138,20 @@ client.on("messageCreate", async message => {
 **Aerialphile Commands**
 
 Admin:
-- !cc <name> <response>
-- !cd <name>
+!cc <name> <response>
+!cd <name>
 
 Users:
-- !cclist
-- !reminder <time> <text>
+!cclist
+!rmd <time> <text> (reminder)
 
 Slash:
- /say
+/say
+/roleusers
 `);
+
   }
+
 
   // CREATE COMMAND
   if (command === "!cc") {
@@ -136,7 +173,9 @@ Slash:
     });
 
     message.channel.send(`**Command !${name} created.**`);
+
   }
+
 
   // DELETE COMMAND
   if (command === "!cd") {
@@ -150,9 +189,11 @@ Slash:
     await commands.deleteOne({ name: name });
 
     message.channel.send(`**Command !${name} deleted.**`);
+
   }
 
-  // LIST COMMANDS
+
+  // COMMAND LIST
   if (command === "!cclist") {
 
     const list = await commands.find().toArray();
@@ -164,16 +205,18 @@ Slash:
     const names = list.map(c => `!${c.name}`).join(", ");
 
     message.channel.send(`**Commands:** ${names}`);
+
   }
 
+
   // REMINDER
-  if (command === "!reminder") {
+  if (command === "!rmd") {
 
     const time = args[1];
     const text = args.slice(2).join(" ");
 
     if (!time || !text) {
-      return message.channel.send("**Usage:** !reminder 10m text");
+      return message.channel.send("**Usage:** !rmd 10m text");
     }
 
     let ms = 0;
@@ -185,10 +228,13 @@ Slash:
     message.channel.send(`**Reminder set for ${time}.**`);
 
     setTimeout(() => {
+
       message.channel.send(`${message.author} **Reminder:** ${text}`);
+
     }, ms);
 
   }
+
 
   // RUN CUSTOM COMMAND
   const name = command.replace("!", "");
@@ -196,7 +242,9 @@ Slash:
   const cmd = await commands.findOne({ name: name });
 
   if (cmd) {
+
     message.channel.send(cmd.response);
+
   }
 
 });
