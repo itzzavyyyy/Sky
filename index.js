@@ -128,7 +128,7 @@ client.on("messageCreate", async message => {
 
 
   // HELP
-  if (command === "!help") {
+  if (command === "!ahelp") {
 
     if (!isAdmin) {
       return message.channel.send("**Only admins can use this command.**");
