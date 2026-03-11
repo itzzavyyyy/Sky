@@ -93,11 +93,14 @@ client.on("interactionCreate", async interaction => {
 
 
   // ROLE USERS
-  if (interaction.commandName === "roleusers") {
+ if (interaction.commandName === "roleusers") {
 
-    const role = interaction.options.getRole("role");
+   const role = interaction.options.getRole("role");
 
-    const members = role.members.map(m => m.user.username);
+   await interaction.guild.members.fetch(); // fetch all members
+
+   const members = role.members.map(m => m.user.username);
+
 
     if (members.length === 0) {
       return interaction.reply("No users have this role.");
