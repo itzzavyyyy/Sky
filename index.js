@@ -1,5 +1,5 @@
 const { Client, GatewayIntentBits, PermissionsBitField } = require("discord.js");
-const fs = require("fs");
+const { MongoClient } = require("mongodb");
 
 const client = new Client({
   intents: [
@@ -9,21 +9,36 @@ const client = new Client({
   ]
 });
 
-let customCommands = {};
+const mongo = new MongoClient(process.env.MONGO_URI);
 
-if (fs.existsSync("./commands.json")) {
-  customCommands = JSON.parse(fs.readFileSync("./commands.json"));
+let commands;
+
+async function startDatabase() {
+
+  await mongo.connect();
+
+  const db = mongo.db("botdata");
+
+  commands = db.collection("commands");
+
+  console.log("Connected to MongoDB");
+
 }
+
+startDatabase();
 
 client.once("ready", () => {
   console.log("Aerialphile is online!");
 });
 
-client.on("messageCreate", message => {
+client.on("messageCreate", async message => {
 
   if (message.author.bot) return;
 
+  if (!message.content.startsWith("!")) return;
+
   const args = message.content.split(" ");
+
   const command = args[0].toLowerCase();
 
   const isAdmin = message.member.permissions.has(
@@ -37,31 +52,37 @@ client.on("messageCreate", message => {
       return message.channel.send("**Only admins can use this command.**");
     }
 
-    message.reply(`
+    message.channel.send(`
 **Aerialphile Commands**
 
-!cc <name> <response> - Create custom command  
-!cd <name> - Delete custom command  
-!cclist - Show custom commands  
-!reminder <time> <text> - Set reminder
+**Admin Commands**
+- !cc <name> <response>
+- !cd <name>
+
+**User Commands**
+- !cclist
+- !reminder <time> <text>
 `);
   }
 
-  // CREATE COMMAND
+  // CREATE CUSTOM COMMAND
   if (command === "!cc") {
 
-    if (!isAdmin) return message.channel.send("**Only admins can add commands.**");
+    if (!isAdmin) {
+      return message.channel.send("**Only admins can add commands.**");
+    }
 
     const name = args[1];
     const response = args.slice(2).join(" ");
 
     if (!name || !response) {
-      return message.channel.send("**Usage:** !cc command response");
+      return message.channel.send("**Usage:** !cc name response");
     }
 
-    customCommands[name] = response;
-
-    fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
+    await commands.insertOne({
+      name: name,
+      response: response
+    });
 
     message.channel.send(`**Command !${name} created.**`);
   }
@@ -69,17 +90,13 @@ client.on("messageCreate", message => {
   // DELETE COMMAND
   if (command === "!cd") {
 
-    if (!isAdmin) return message.channel.send("**Only admins can delete commands.**");
+    if (!isAdmin) {
+      return message.channel.send("**Only admins can delete commands.**");
+    }
 
     const name = args[1];
 
-    if (!customCommands[name]) {
-      return message.channel.send("**Command not found.**");
-    }
-
-    delete customCommands[name];
-
-    fs.writeFileSync("commands.json", JSON.stringify(customCommands, null, 2));
+    await commands.deleteOne({ name: name });
 
     message.channel.send(`**Command !${name} deleted.**`);
   }
@@ -87,13 +104,15 @@ client.on("messageCreate", message => {
   // COMMAND LIST
   if (command === "!cclist") {
 
-    const list = Object.keys(customCommands);
+    const list = await commands.find().toArray();
 
     if (list.length === 0) {
       return message.channel.send("**No custom commands created.**");
     }
 
-    message.channel.send(`**Custom Commands:**\n${list.map(c => `!${c}`).join(", ")}`);
+    const names = list.map(c => `!${c.name}`).join(", ");
+
+    message.channel.send(`**Commands:** ${names}`);
   }
 
   // REMINDER
@@ -103,7 +122,7 @@ client.on("messageCreate", message => {
     const text = args.slice(2).join(" ");
 
     if (!time || !text) {
-      return message.channel.send("**Usage:** !reminder 10m do homework");
+      return message.channel.send("**Usage:** !reminder 10m text");
     }
 
     let ms = 0;
@@ -122,8 +141,10 @@ client.on("messageCreate", message => {
   // RUN CUSTOM COMMAND
   const name = command.replace("!", "");
 
-  if (customCommands[name]) {
-    message.channel.send(customCommands[name]);
+  const cmd = await commands.findOne({ name: name });
+
+  if (cmd) {
+    message.channel.send(cmd.response);
   }
 
 });
