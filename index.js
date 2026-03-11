@@ -21,6 +21,7 @@ const mongo = new MongoClient(process.env.MONGO_URI);
 
 let commands;
 
+
 // DATABASE
 async function startDatabase() {
 
@@ -37,7 +38,7 @@ async function startDatabase() {
 startDatabase();
 
 
-// READY EVENT
+// BOT READY
 client.once("clientReady", async () => {
 
   console.log("Aerialphile is online!");
@@ -62,6 +63,36 @@ client.once("clientReady", async () => {
           .setDescription("Select a role")
           .setRequired(true)
       )
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    new SlashCommandBuilder()
+      .setName("addrole")
+      .setDescription("Give a role to a user")
+      .addUserOption(option =>
+        option.setName("user")
+          .setDescription("User to give role")
+          .setRequired(true)
+      )
+      .addRoleOption(option =>
+        option.setName("role")
+          .setDescription("Role to add")
+          .setRequired(true)
+      )
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    new SlashCommandBuilder()
+      .setName("removerole")
+      .setDescription("Remove a role from a user")
+      .addUserOption(option =>
+        option.setName("user")
+          .setDescription("User to remove role from")
+          .setRequired(true)
+      )
+      .addRoleOption(option =>
+        option.setName("role")
+          .setDescription("Role to remove")
+          .setRequired(true)
+      )
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
   ];
@@ -71,7 +102,7 @@ client.once("clientReady", async () => {
 });
 
 
-// SLASH COMMANDS
+// SLASH COMMAND HANDLER
 client.on("interactionCreate", async interaction => {
 
   if (!interaction.isChatInputCommand()) return;
@@ -93,22 +124,45 @@ client.on("interactionCreate", async interaction => {
 
 
   // ROLE USERS
- if (interaction.commandName === "roleusers") {
+  if (interaction.commandName === "roleusers") {
 
-   const role = interaction.options.getRole("role");
+    const role = interaction.options.getRole("role");
 
-   await interaction.guild.members.fetch(); // fetch all members
+    await interaction.guild.members.fetch();
 
-   const members = role.members.map(m => m.user.username);
-
+    const members = role.members.map(m => `<@${m.user.id}>`);
 
     if (members.length === 0) {
       return interaction.reply("No users have this role.");
     }
 
-    const list = members.join("\n");
+    interaction.reply(`**Users with ${role.name} (${members.length}):**\n${members.join("\n")}`);
 
-    interaction.reply(`**Users with ${role.name}:**\n${list}`);
+  }
+
+
+  // ADD ROLE
+  if (interaction.commandName === "addrole") {
+
+    const user = interaction.options.getMember("user");
+    const role = interaction.options.getRole("role");
+
+    await user.roles.add(role);
+
+    interaction.reply(`**${user.user.username} was given the role ${role.name}.**`);
+
+  }
+
+
+  // REMOVE ROLE
+  if (interaction.commandName === "removerole") {
+
+    const user = interaction.options.getMember("user");
+    const role = interaction.options.getRole("role");
+
+    await user.roles.remove(role);
+
+    interaction.reply(`**${role.name} was removed from ${user.user.username}.**`);
 
   }
 
@@ -132,7 +186,7 @@ client.on("messageCreate", async message => {
 
 
   // HELP
-  if (command === "!ahelp") {
+  if (command === "!help") {
 
     if (!isAdmin) {
       return message.channel.send("**Only admins can use this command.**");
@@ -147,11 +201,13 @@ Admin:
 
 Users:
 !cclist
-!rmd <time> <text> (reminder)
+!reminder <time> <text>
 
 Slash:
-/say
-/roleusers
+ /say
+ /roleusers
+ /addrole
+ /removerole
 `);
 
   }
@@ -197,7 +253,7 @@ Slash:
   }
 
 
-  // COMMAND LIST
+  // LIST COMMANDS
   if (command === "!cclist") {
 
     const list = await commands.find().toArray();
@@ -214,13 +270,13 @@ Slash:
 
 
   // REMINDER
-  if (command === "!rmd") {
+  if (command === "!reminder") {
 
     const time = args[1];
     const text = args.slice(2).join(" ");
 
     if (!time || !text) {
-      return message.channel.send("**Usage:** !rmd 10m text");
+      return message.channel.send("**Usage:** !reminder 10m text");
     }
 
     let ms = 0;
