@@ -1,4 +1,11 @@
-const { Client, GatewayIntentBits, PermissionsBitField } = require("discord.js");
+const { 
+  Client, 
+  GatewayIntentBits, 
+  PermissionsBitField,
+  SlashCommandBuilder,
+  PermissionFlagsBits
+} = require("discord.js");
+
 const { MongoClient } = require("mongodb");
 
 const client = new Client({
@@ -13,6 +20,7 @@ const mongo = new MongoClient(process.env.MONGO_URI);
 
 let commands;
 
+// CONNECT DATABASE
 async function startDatabase() {
 
   await mongo.connect();
@@ -27,10 +35,50 @@ async function startDatabase() {
 
 startDatabase();
 
-client.once("ready", () => {
+// READY EVENT
+client.once("clientReady", async () => {
+
   console.log("Aerialphile is online!");
+
+  const slashCommands = [
+
+    new SlashCommandBuilder()
+      .setName("say")
+      .setDescription("Make the bot say something")
+      .addStringOption(option =>
+        option.setName("text")
+          .setDescription("Message to send")
+          .setRequired(true)
+      )
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+
+  ];
+
+  await client.application.commands.set(slashCommands);
+
 });
 
+// SLASH COMMAND HANDLER
+client.on("interactionCreate", async interaction => {
+
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === "say") {
+
+    const text = interaction.options.getString("text");
+
+    await interaction.reply({
+      content: "Message sent.",
+      ephemeral: true
+    });
+
+    interaction.channel.send(text);
+
+  }
+
+});
+
+// MESSAGE COMMANDS
 client.on("messageCreate", async message => {
 
   if (message.author.bot) return;
@@ -45,8 +93,8 @@ client.on("messageCreate", async message => {
     PermissionsBitField.Flags.Administrator
   );
 
-  // HELP COMMAND
-  if (command === "!help") {
+  // HELP
+  if (command === "!ahelp") {
 
     if (!isAdmin) {
       return message.channel.send("**Only admins can use this command.**");
@@ -55,17 +103,20 @@ client.on("messageCreate", async message => {
     message.channel.send(`
 **Aerialphile Commands**
 
-**Admin Commands**
+Admin:
 - !cc <name> <response>
 - !cd <name>
 
-**User Commands**
+Users:
 - !cclist
 - !reminder <time> <text>
+
+Slash:
+ /say
 `);
   }
 
-  // CREATE CUSTOM COMMAND
+  // CREATE COMMAND
   if (command === "!cc") {
 
     if (!isAdmin) {
@@ -101,7 +152,7 @@ client.on("messageCreate", async message => {
     message.channel.send(`**Command !${name} deleted.**`);
   }
 
-  // COMMAND LIST
+  // LIST COMMANDS
   if (command === "!cclist") {
 
     const list = await commands.find().toArray();
@@ -136,6 +187,7 @@ client.on("messageCreate", async message => {
     setTimeout(() => {
       message.channel.send(`${message.author} **Reminder:** ${text}`);
     }, ms);
+
   }
 
   // RUN CUSTOM COMMAND
