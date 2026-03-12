@@ -114,6 +114,31 @@ client.once("clientReady", async () => {
           .setRequired(false)
       )
 
+    new SlashCommandBuilder()
+  .setName("sticky")
+  .setDescription("Set a sticky message")
+  .addChannelOption(option =>
+    option.setName("channel")
+      .setDescription("Channel for sticky")
+      .setRequired(true)
+  )
+  .addStringOption(option =>
+    option.setName("message")
+      .setDescription("Sticky message")
+      .setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+new SlashCommandBuilder()
+  .setName("unsticky")
+  .setDescription("Remove sticky message")
+  .addChannelOption(option =>
+    option.setName("channel")
+      .setDescription("Channel")
+      .setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
   ];
 
   await client.application.commands.set(slashCommands);
@@ -264,7 +289,9 @@ client.on("messageCreate", async message => {
 /roleusers
 /addrole
 /removerole
-/userinfo`
+/userinfo
+/sticky
+/unsticky`
         }
       );
 
