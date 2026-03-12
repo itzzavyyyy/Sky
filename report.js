@@ -10,6 +10,8 @@ ButtonStyle
 const REPORT_CHANNEL_ID = "REPORT_CHANNEL_ID";
 const MOD_ROLE_ID = "MOD_ROLE_ID";
 
+const reportLimits = new Map();
+
 module.exports = (client) => {
 
 client.once("clientReady", async () => {
@@ -31,6 +33,43 @@ client.on("interactionCreate", async interaction => {
 if (interaction.isMessageContextMenuCommand()) {
 
 if (interaction.commandName !== "Report") return;
+
+const userId = interaction.user.id;
+const now = Date.now();
+
+let data = reportLimits.get(userId);
+
+if (!data) {
+
+reportLimits.set(userId, {
+reportCount: 1,
+resetTime: now + 3600000
+});
+
+} else {
+
+if (now > data.resetTime) {
+
+reportLimits.set(userId, {
+reportCount: 1,
+resetTime: now + 3600000
+});
+
+} else if (data.reportCount >= 2) {
+
+return interaction.reply({
+content: "You have reached the report limit. You can report again in 1 hour.",
+ephemeral: true
+});
+
+} else {
+
+data.reportCount += 1;
+reportLimits.set(userId, data);
+
+}
+
+}
 
 const msg = interaction.targetMessage;
 
