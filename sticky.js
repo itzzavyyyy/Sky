@@ -4,7 +4,7 @@ module.exports = (client, db) => {
 
 const stickyCollection = db.collection("stickyMessages");
 
-client.once("clientReady", async () => {
+client.once("ready", async () => {
 
 const commands = [
 
@@ -34,6 +34,8 @@ for (const guild of client.guilds.cache.values()) {
 await guild.commands.create(commands[0]);
 await guild.commands.create(commands[1]);
 }
+
+console.log("Sticky commands loaded");
 
 });
 
