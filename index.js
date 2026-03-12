@@ -44,7 +44,7 @@ startDatabase();
 // READY EVENT
 client.once("clientReady", async () => {
 
-  console.log("Aerialphile is online!");
+  console.log("Infinity Sky is online!");
 
   client.user.setPresence({
   activities: [{ name: "I'm watching you!!", type: 3 }],
@@ -240,8 +240,8 @@ client.on("messageCreate", async message => {
   if (command === "!ahelp") {
 
     const embed = new EmbedBuilder()
-      .setTitle("Aerialphile Commands")
-      .setColor(0x5865F2)
+      .setTitle("Infinity Sky Commands")
+      .setColor(0x0B3D91)
       .addFields(
         {
           name: "Admin Commands",
