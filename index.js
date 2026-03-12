@@ -20,8 +20,6 @@ const client = new Client({
 
 require("./report.js")(client);
 
-require("./sticky.js")(client, db);
-
 const mongo = new MongoClient(process.env.MONGO_URI);
 
 let commands;
