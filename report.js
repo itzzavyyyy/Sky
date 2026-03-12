@@ -7,17 +7,33 @@ ButtonBuilder,
 ButtonStyle
 } = require("discord.js");
 
-const ReportLimit = require("./reportLimitSchema");
-const Sticky = require("./stickySchema");
+const mongoose = require("mongoose");
 
 const REPORT_CHANNEL_ID = "1481238594533326958";
 const MOD_ROLE_ID = "1467028343705571328";
+const PROTECTED_ROLE_ID = "1467028343705571328";
 
-const PROTECTED_ROLE_ID = "ROLE_ID_HERE";
+// Report limit schema
+const reportLimitSchema = new mongoose.Schema({
+userId: String,
+reportCount: Number,
+resetTime: Number
+});
+
+const ReportLimit = mongoose.models.ReportLimit || mongoose.model("ReportLimit", reportLimitSchema);
+
+// Sticky schema
+const stickySchema = new mongoose.Schema({
+channelId: String,
+message: String,
+lastMessageId: String
+});
+
+const Sticky = mongoose.models.Sticky || mongoose.model("Sticky", stickySchema);
 
 module.exports = (client) => {
 
-client.once("clientReady", async () => {
+client.once("ready", async () => {
 
 const reportCommand = new ContextMenuCommandBuilder()
 .setName("Report")
@@ -66,6 +82,8 @@ console.log("Report + Sticky commands loaded");
 });
 
 client.on("interactionCreate", async interaction => {
+
+// REPORT SYSTEM
 
 if (interaction.isMessageContextMenuCommand()) {
 
@@ -181,6 +199,8 @@ ephemeral: true
 
 }
 
+// STICKY COMMANDS
+
 if (interaction.isChatInputCommand()) {
 
 if (interaction.commandName === "sticky") {
@@ -231,6 +251,8 @@ ephemeral: true
 
 }
 
+// REPORT BUTTONS
+
 if (interaction.isButton()) {
 
 if (interaction.customId === "report_accept") {
@@ -254,6 +276,8 @@ components: []
 }
 
 });
+
+// STICKY MESSAGE SYSTEM
 
 client.on("messageCreate", async message => {
 
@@ -293,6 +317,8 @@ console.log(err);
 }
 
 });
+
+// ROLE TIMEOUT PROTECTION
 
 client.on("guildMemberUpdate", async (oldMember, newMember) => {
 
