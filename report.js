@@ -7,83 +7,28 @@ ButtonBuilder,
 ButtonStyle
 } = require("discord.js");
 
-const mongoose = require("mongoose");
+const ReportLimit = require("./reportLimitSchema");
 
 const REPORT_CHANNEL_ID = "1481238594533326958";
 const MOD_ROLE_ID = "1467028343705571328";
-const PROTECTED_ROLE_ID = "1467028343705571328";
-
-// Report limit schema
-const reportLimitSchema = new mongoose.Schema({
-userId: String,
-reportCount: Number,
-resetTime: Number
-});
-
-const ReportLimit = mongoose.models.ReportLimit || mongoose.model("ReportLimit", reportLimitSchema);
-
-// Sticky schema
-const stickySchema = new mongoose.Schema({
-channelId: String,
-message: String,
-lastMessageId: String
-});
-
-const Sticky = mongoose.models.Sticky || mongoose.model("Sticky", stickySchema);
 
 module.exports = (client) => {
 
-client.once("ready", async () => {
+client.once("clientReady", async () => {
 
-const reportCommand = new ContextMenuCommandBuilder()
+const command = new ContextMenuCommandBuilder()
 .setName("Report")
 .setType(ApplicationCommandType.Message);
 
 for (const guild of client.guilds.cache.values()) {
-
-await guild.commands.create(reportCommand);
-
-await guild.commands.create({
-name: "sticky",
-description: "Set a sticky message",
-options: [
-{
-name: "channel",
-description: "Channel",
-type: 7,
-required: true
-},
-{
-name: "message",
-description: "Sticky message",
-type: 3,
-required: true
-}
-]
-});
-
-await guild.commands.create({
-name: "unsticky",
-description: "Remove sticky message",
-options: [
-{
-name: "channel",
-description: "Channel",
-type: 7,
-required: true
-}
-]
-});
-
+await guild.commands.create(command);
 }
 
-console.log("Report + Sticky commands loaded");
+console.log("Report command loaded");
 
 });
 
 client.on("interactionCreate", async interaction => {
-
-// REPORT SYSTEM
 
 if (interaction.isMessageContextMenuCommand()) {
 
@@ -199,60 +144,6 @@ ephemeral: true
 
 }
 
-// STICKY COMMANDS
-
-if (interaction.isChatInputCommand()) {
-
-if (interaction.commandName === "sticky") {
-
-const channel = interaction.options.getChannel("channel");
-const message = interaction.options.getString("message");
-
-let data = await Sticky.findOne({
-channelId: channel.id
-});
-
-if (!data) {
-
-data = await Sticky.create({
-channelId: channel.id,
-message: message,
-lastMessageId: null
-});
-
-} else {
-
-data.message = message;
-await data.save();
-
-}
-
-return interaction.reply({
-content: `📌 Sticky message set in ${channel}`,
-ephemeral: true
-});
-
-}
-
-if (interaction.commandName === "unsticky") {
-
-const channel = interaction.options.getChannel("channel");
-
-await Sticky.deleteOne({
-channelId: channel.id
-});
-
-return interaction.reply({
-content: `❌ Sticky removed from ${channel}`,
-ephemeral: true
-});
-
-}
-
-}
-
-// REPORT BUTTONS
-
 if (interaction.isButton()) {
 
 if (interaction.customId === "report_accept") {
@@ -273,65 +164,6 @@ components: []
 
 }
 
-}
-
-});
-
-// STICKY MESSAGE SYSTEM
-
-client.on("messageCreate", async message => {
-
-if (message.author.bot) return;
-
-const data = await Sticky.findOne({
-channelId: message.channel.id
-});
-
-if (!data) return;
-
-try {
-
-if (data.lastMessageId) {
-
-const oldMsg = await message.channel.messages
-.fetch(data.lastMessageId)
-.catch(() => null);
-
-if (oldMsg) await oldMsg.delete();
-
-}
-
-const embed = new EmbedBuilder()
-.setColor(0xF1C40F)
-.setDescription(`📌 ${data.message}`);
-
-const newMsg = await message.channel.send({
-embeds: [embed]
-});
-
-data.lastMessageId = newMsg.id;
-await data.save();
-
-} catch (err) {
-console.log(err);
-}
-
-});
-
-// ROLE TIMEOUT PROTECTION
-
-client.on("guildMemberUpdate", async (oldMember, newMember) => {
-
-if (!newMember.roles.cache.has(1467028343705571328)) return;
-
-if (!newMember.isCommunicationDisabled()) return;
-
-try {
-
-await newMember.timeout(null);
-
-} catch (err) {
-console.log(err);
 }
 
 });
