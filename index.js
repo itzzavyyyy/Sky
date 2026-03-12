@@ -35,8 +35,6 @@ async function startDatabase() {
   commands = db.collection("commands");
 
   console.log("Connected to MongoDB");
-
-  require("./sticky.js")(client, db);
   
 }
 
