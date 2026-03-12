@@ -7,8 +7,8 @@ ButtonBuilder,
 ButtonStyle
 } = require("discord.js");
 
-const REPORT_CHANNEL_ID = "REPORT_CHANNEL_ID";
-const MOD_ROLE_ID = "MOD_ROLE_ID";
+const REPORT_CHANNEL_ID = "1481238594533326958";
+const MOD_ROLE_ID = "1467028343705571328";
 
 const reportLimits = new Map();
 
