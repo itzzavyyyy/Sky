@@ -6,9 +6,7 @@ const stickyCollection = db.collection("stickyMessages");
 
 client.once("ready", async () => {
 
-const commands = [
-
-new SlashCommandBuilder()
+const stickyCommand = new SlashCommandBuilder()
 .setName("sticky")
 .setDescription("Create a sticky message")
 .addChannelOption(option =>
@@ -18,26 +16,27 @@ option.setName("channel")
 .addStringOption(option =>
 option.setName("message")
 .setDescription("Sticky message text")
-.setRequired(true)),
+.setRequired(true));
 
-new SlashCommandBuilder()
+const unstickyCommand = new SlashCommandBuilder()
 .setName("unsticky")
 .setDescription("Remove sticky message")
 .addChannelOption(option =>
 option.setName("channel")
 .setDescription("Channel")
-.setRequired(true))
-
-];
+.setRequired(true));
 
 for (const guild of client.guilds.cache.values()) {
-await guild.commands.create(commands[0]);
-await guild.commands.create(commands[1]);
+
+await guild.commands.create(stickyCommand.toJSON());
+await guild.commands.create(unstickyCommand.toJSON());
+
 }
 
-console.log("Sticky commands loaded");
+console.log("Sticky commands registered");
 
 });
+
 
 client.on("interactionCreate", async interaction => {
 
@@ -60,7 +59,10 @@ lastMessageId: null
 { upsert: true }
 );
 
-interaction.reply({ content: "Sticky message created.", ephemeral: true });
+return interaction.reply({
+content: `📌 Sticky message set in ${channel}`,
+ephemeral: true
+});
 
 }
 
@@ -70,11 +72,15 @@ const channel = interaction.options.getChannel("channel");
 
 await stickyCollection.deleteOne({ channelId: channel.id });
 
-interaction.reply({ content: "Sticky removed.", ephemeral: true });
+return interaction.reply({
+content: `❌ Sticky removed from ${channel}`,
+ephemeral: true
+});
 
 }
 
 });
+
 
 client.on("messageCreate", async message => {
 
@@ -87,8 +93,13 @@ if (!data) return;
 try {
 
 if (data.lastMessageId) {
-const oldMsg = await message.channel.messages.fetch(data.lastMessageId).catch(() => null);
+
+const oldMsg = await message.channel.messages
+.fetch(data.lastMessageId)
+.catch(() => null);
+
 if (oldMsg) await oldMsg.delete();
+
 }
 
 const embed = new EmbedBuilder()
@@ -102,7 +113,9 @@ await stickyCollection.updateOne(
 { $set: { lastMessageId: newSticky.id } }
 );
 
-} catch (err) {}
+} catch (err) {
+console.log(err);
+}
 
 });
 
