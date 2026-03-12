@@ -7,10 +7,8 @@ ButtonBuilder,
 ButtonStyle
 } = require("discord.js");
 
-const ReportLimit = require("./reportLimitSchema");
-
-const REPORT_CHANNEL_ID = "1481238594533326958";
-const MOD_ROLE_ID = "1467028343705571328";
+const REPORT_CHANNEL_ID = "REPORT_CHANNEL_ID";
+const MOD_ROLE_ID = "MOD_ROLE_ID";
 
 module.exports = (client) => {
 
@@ -42,41 +40,6 @@ content: "You cannot report your own message.",
 ephemeral: true
 });
 }
-
-const now = Date.now();
-
-let data = await ReportLimit.findOne({
-userId: interaction.user.id
-});
-
-if (!data) {
-
-data = await ReportLimit.create({
-userId: interaction.user.id,
-reportCount: 0,
-resetTime: now + 3600000
-});
-
-}
-
-if (now > data.resetTime) {
-
-data.reportCount = 0;
-data.resetTime = now + 3600000;
-
-}
-
-if (data.reportCount >= 2) {
-
-return interaction.reply({
-content: "You have reached the report limit. You can report again in 1 hour.",
-ephemeral: true
-});
-
-}
-
-data.reportCount += 1;
-await data.save();
 
 const reportChannel = client.channels.cache.get(REPORT_CHANNEL_ID);
 
