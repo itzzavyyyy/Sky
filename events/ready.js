@@ -56,7 +56,19 @@ client.once("clientReady", async () => {
       .setDescription("Show user information")
       .addUserOption(option =>
         option.setName("user").setDescription("Select user").setRequired(false)
+      ),
+
+    new SlashCommandBuilder()
+      .setName("grantperm")
+      .setDescription("Allow user to use /tempperm")
+      .addUserOption(option =>
+        option.setName("user").setDescription("User").setRequired(true)
       )
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    new SlashCommandBuilder()
+      .setName("tempperm")
+      .setDescription("Temporarily become moderator for 15 minutes")
 
   ];
 
