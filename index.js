@@ -14,5 +14,6 @@ require("./events/ready")(client);
 require("./events/interactionCreate")(client);
 require("./events/messageCreate")(client);
 require("./report")(client);
+require("./events/protectionSystem")(client);
 
 client.login(process.env.TOKEN);
