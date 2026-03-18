@@ -9,6 +9,7 @@ module.exports = async (client) => {
   const db = mongo.db("botdata");
 
   client.commandsDB = db.collection("commands");
+  client.protectedUsersDB = db.collection("protectedUsers");
 
   console.log("Connected to MongoDB");
 
