@@ -58,6 +58,27 @@ client.once("clientReady", async () => {
         option.setName("user").setDescription("Select user").setRequired(false)
       ),
 
+    new SlashCommandBuilder()
+  .setName("protect")
+  .setDescription("Protect a user from timeouts")
+  .addUserOption(option =>
+    option.setName("user").setDescription("User").setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+new SlashCommandBuilder()
+  .setName("unprotect")
+  .setDescription("Remove protection from a user")
+  .addUserOption(option =>
+    option.setName("user").setDescription("User").setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+new SlashCommandBuilder()
+  .setName("protectedlist")
+  .setDescription("Show protected users")
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    
   ];
 
   await client.application.commands.set(slashCommands);
