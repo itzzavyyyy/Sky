@@ -78,6 +78,27 @@ new SlashCommandBuilder()
   .setName("protectedlist")
   .setDescription("Show protected users")
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    new SlashCommandBuilder()
+  .setName("setstatus")
+  .setDescription("Change bot status")
+  .addStringOption(option =>
+    option.setName("text")
+      .setDescription("Status text")
+      .setRequired(true)
+  )
+  .addStringOption(option =>
+    option.setName("type")
+      .setDescription("Activity type")
+      .setRequired(true)
+      .addChoices(
+        { name: "Playing", value: "PLAYING" },
+        { name: "Watching", value: "WATCHING" },
+        { name: "Listening", value: "LISTENING" },
+        { name: "Streaming", value: "STREAMING" }
+      )
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
   ];
 
