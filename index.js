@@ -17,6 +17,6 @@ require("./report")(client);
 require("./events/protectionSystem")(client);
 require("./events/statusSystem")(client);
 require("./events/cleanSystem")(client);
-require("./events/reactSystem")(client);
+require("./events/emiireact")(client);
 
 client.login(process.env.TOKEN);
