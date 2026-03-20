@@ -99,6 +99,16 @@ new SlashCommandBuilder()
       )
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    new SlashCommandBuilder()
+  .setName("cleanbot")
+  .setDescription("Add this channel to auto-clean list")
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+new SlashCommandBuilder()
+  .setName("rembot")
+  .setDescription("Remove this channel from auto-clean list")
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
   ];
 
