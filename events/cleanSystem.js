@@ -2,7 +2,8 @@ module.exports = (client) => {
 
   // 🔹 ADD BOT IDS YOU WANT TO IGNORE HERE
   const IGNORED_BOTS = [
-    "1446160587070378136"
+  "144616058707378136",
+  "678344927997853742"
   ];
 
   // 🔹 COMMANDS (add/remove channel)
