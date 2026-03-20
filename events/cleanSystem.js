@@ -37,36 +37,27 @@ module.exports = (client) => {
   });
 
 
-  // 🔹 AUTO CLEAN (ONLY current command reply)
-  client.on("interactionCreate", async interaction => {
+  // 🔹 AUTO CLEAN (OTHER BOTS ONLY)
+  client.on("messageCreate", async (message) => {
 
-    if (!interaction.isChatInputCommand()) return;
+    if (!message.guild) return;
 
-    const channelId = interaction.channel.id;
-    const guildId = interaction.guild.id;
+    const channelId = message.channel.id;
+    const guildId = message.guild.id;
 
     const data = await client.cleanChannelsDB.findOne({ guildId, channelId });
 
     if (!data) return;
 
-    // skip system commands themselves
-    if (["cleanbot", "rembot"].includes(interaction.commandName)) return;
+    // ❌ ignore your own bot
+    if (message.author.id === client.user.id) return;
+
+    // ✅ only target OTHER bots
+    if (!message.author.bot) return;
 
     try {
 
-      // wait for bot to send reply
-      setTimeout(async () => {
-
-        const reply = await interaction.fetchReply().catch(() => null);
-
-        if (!reply) return;
-
-        // ensure it's bot message (extra safety)
-        if (reply.author.id !== client.user.id) return;
-
-        await reply.delete().catch(() => {});
-
-      }, 1500);
+      await message.delete().catch(() => {});
 
     } catch {}
 
