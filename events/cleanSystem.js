@@ -1,5 +1,10 @@
 module.exports = (client) => {
 
+  // 🔹 ADD BOT IDS YOU WANT TO IGNORE HERE
+  const IGNORED_BOTS = [
+    "1446160587070378136"
+  ];
+
   // 🔹 COMMANDS (add/remove channel)
   client.on("interactionCreate", async interaction => {
 
@@ -37,7 +42,7 @@ module.exports = (client) => {
   });
 
 
-  // 🔹 AUTO CLEAN (OTHER BOTS ONLY)
+  // 🔹 AUTO CLEAN SYSTEM
   client.on("messageCreate", async (message) => {
 
     if (!message.guild) return;
@@ -52,13 +57,14 @@ module.exports = (client) => {
     // ❌ ignore your own bot
     if (message.author.id === client.user.id) return;
 
-    // ✅ only target OTHER bots
+    // ❌ ignore specific bots
+    if (IGNORED_BOTS.includes(message.author.id)) return;
+
+    // ❌ ignore users
     if (!message.author.bot) return;
 
     try {
-
       await message.delete().catch(() => {});
-
     } catch {}
 
   });
