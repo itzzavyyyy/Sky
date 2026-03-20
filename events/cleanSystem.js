@@ -1,6 +1,6 @@
 module.exports = (client) => {
 
-  // 🔹 COMMANDS
+  // 🔹 COMMANDS (add/remove channel)
   client.on("interactionCreate", async interaction => {
 
     if (!interaction.isChatInputCommand()) return;
@@ -8,7 +8,6 @@ module.exports = (client) => {
     const channelId = interaction.channel.id;
     const guildId = interaction.guild.id;
 
-    // ADD CHANNEL
     if (interaction.commandName === "cleanbot") {
 
       await client.cleanChannelsDB.updateOne(
@@ -24,7 +23,6 @@ module.exports = (client) => {
 
     }
 
-    // REMOVE CHANNEL
     if (interaction.commandName === "rembot") {
 
       await client.cleanChannelsDB.deleteOne({ guildId, channelId });
@@ -39,7 +37,7 @@ module.exports = (client) => {
   });
 
 
-  // 🔹 AUTO CLEAN LOGIC
+  // 🔹 AUTO CLEAN (ONLY current command reply)
   client.on("interactionCreate", async interaction => {
 
     if (!interaction.isChatInputCommand()) return;
@@ -51,22 +49,26 @@ module.exports = (client) => {
 
     if (!data) return;
 
-    // wait a bit so bot sends message first
-    setTimeout(async () => {
+    // skip system commands themselves
+    if (["cleanbot", "rembot"].includes(interaction.commandName)) return;
 
-      try {
+    try {
 
-        const messages = await interaction.channel.messages.fetch({ limit: 50 });
+      // wait for bot to send reply
+      setTimeout(async () => {
 
-        const botMessages = messages.filter(m => m.author.id === client.user.id);
+        const reply = await interaction.fetchReply().catch(() => null);
 
-        for (const msg of botMessages.values()) {
-          await msg.delete().catch(() => {});
-        }
+        if (!reply) return;
 
-      } catch {}
+        // ensure it's bot message (extra safety)
+        if (reply.author.id !== client.user.id) return;
 
-    }, 2000);
+        await reply.delete().catch(() => {});
+
+      }, 1500);
+
+    } catch {}
 
   });
 
