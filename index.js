@@ -18,5 +18,6 @@ require("./events/protectionSystem")(client);
 require("./events/statusSystem")(client);
 require("./events/cleanSystem")(client);
 require("./events/emiireact")(client);
+require("./events/channelAccessSystem")(client);
 
 client.login(process.env.TOKEN);
