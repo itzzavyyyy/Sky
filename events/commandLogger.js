@@ -4,6 +4,9 @@ const LOG_CHANNEL_ID = "1485575354499207258";
 
 module.exports = (client) => {
 
+  // =======================
+  // 🔹 COMMAND LOGS (unchanged)
+  // =======================
   client.on("interactionCreate", async (interaction) => {
 
     if (!interaction.isChatInputCommand()) return;
@@ -64,7 +67,19 @@ module.exports = (client) => {
 
 
   // =======================
-  // 🔹 TIMEOUT REMOVED (ONLY PROTECTED SYSTEM)
+  // 🔹 TRACK BOT TIMEOUT REMOVALS (FLAG SYSTEM)
+  // =======================
+  const recentlyRemoved = new Set();
+
+  // expose helper so protection system can mark it
+  client.markTimeoutRemoved = (userId) => {
+    recentlyRemoved.add(userId);
+    setTimeout(() => recentlyRemoved.delete(userId), 5000);
+  };
+
+
+  // =======================
+  // 🔹 TIMEOUT REMOVED LOG (ONLY BOT)
   // =======================
   client.on("guildMemberUpdate", async (oldMember, newMember) => {
 
@@ -75,18 +90,13 @@ module.exports = (client) => {
         !newMember.communicationDisabledUntilTimestamp
       ) {
 
-        // check if user is protected
-        const data = await client.protectedUsersDB.findOne({
-          userId: newMember.id
-        });
-
-        if (!data) return; // only log protected users
+        if (!recentlyRemoved.has(newMember.id)) return;
 
         const channel = newMember.guild.channels.cache.get(LOG_CHANNEL_ID);
         if (!channel) return;
 
         const embed = new EmbedBuilder()
-          .setTitle("Protected Timeout Removed")
+          .setTitle("Protected Timeout Removed (Bot)")
           .setColor(0x3498db)
           .addFields(
             { name: "User", value: `${newMember.user.tag}`, inline: true },
@@ -104,15 +114,13 @@ module.exports = (client) => {
 
 
   // =======================
-  // 🔹 BOT MESSAGE DELETE (ONLY CLEAN SYSTEM)
+  // 🔹 BOT MESSAGE DELETE (clean system)
   // =======================
   client.on("messageDelete", async (message) => {
 
     try {
 
       if (!message.guild) return;
-
-      // only log bot messages
       if (!message.author?.bot) return;
 
       const data = await client.cleanChannelsDB.findOne({
@@ -120,7 +128,7 @@ module.exports = (client) => {
         channelId: message.channel.id
       });
 
-      if (!data) return; // only log clean channels
+      if (!data) return;
 
       const channel = message.guild.channels.cache.get(LOG_CHANNEL_ID);
       if (!channel) return;
