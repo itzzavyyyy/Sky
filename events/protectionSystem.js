@@ -87,11 +87,6 @@ module.exports = (client) => {
 
       await newMember.timeout(null);
 
-      // 🔹 MARK FOR LOGGER
-      if (client.markTimeoutRemoved) {
-        client.markTimeoutRemoved(newMember.id);
-      }
-
     } catch {}
 
   });
@@ -125,11 +120,6 @@ module.exports = (client) => {
 
               await member.timeout(null);
 
-              // 🔹 MARK FOR LOGGER
-              if (client.markTimeoutRemoved) {
-                client.markTimeoutRemoved(member.id);
-              }
-
             } catch {}
 
           }
@@ -138,7 +128,7 @@ module.exports = (client) => {
 
       } catch {}
 
-    }, 5 * 60 * 1000); // 5 minutes
+    }, 5 * 60 * 1000);
 
   });
 
