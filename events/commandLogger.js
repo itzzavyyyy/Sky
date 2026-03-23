@@ -67,53 +67,6 @@ module.exports = (client) => {
 
 
   // =======================
-  // 🔹 TRACK BOT TIMEOUT REMOVALS (FLAG SYSTEM)
-  // =======================
-  const recentlyRemoved = new Set();
-
-  // expose helper so protection system can mark it
-  client.markTimeoutRemoved = (userId) => {
-    recentlyRemoved.add(userId);
-    setTimeout(() => recentlyRemoved.delete(userId), 5000);
-  };
-
-
-  // =======================
-  // 🔹 TIMEOUT REMOVED LOG (ONLY BOT)
-  // =======================
-  client.on("guildMemberUpdate", async (oldMember, newMember) => {
-
-    try {
-
-      if (
-        oldMember.communicationDisabledUntilTimestamp &&
-        !newMember.communicationDisabledUntilTimestamp
-      ) {
-
-        if (!recentlyRemoved.has(newMember.id)) return;
-
-        const channel = newMember.guild.channels.cache.get(LOG_CHANNEL_ID);
-        if (!channel) return;
-
-        const embed = new EmbedBuilder()
-          .setTitle("Protected Timeout Removed (Bot)")
-          .setColor(0x3498db)
-          .addFields(
-            { name: "User", value: `${newMember.user.tag}`, inline: true },
-            { name: "User ID", value: newMember.id, inline: true }
-          )
-          .setTimestamp();
-
-        await channel.send({ embeds: [embed] });
-
-      }
-
-    } catch {}
-
-  });
-
-
-  // =======================
   // 🔹 BOT MESSAGE DELETE (clean system)
   // =======================
   client.on("messageDelete", async (message) => {
