@@ -73,26 +73,72 @@ module.exports = (client) => {
 
     try {
 
-      // check if timed out
       const isTimedOut =
         newMember.isCommunicationDisabled() ||
         newMember.communicationDisabledUntil;
 
       if (!isTimedOut) return;
 
-      // check database
       const data = await client.protectedUsersDB.findOne({
         userId: newMember.id
       });
 
       if (!data) return;
 
-      // remove timeout silently
       await newMember.timeout(null);
 
-    } catch (err) {
-      // completely silent
-    }
+      // 🔹 MARK FOR LOGGER
+      if (client.markTimeoutRemoved) {
+        client.markTimeoutRemoved(newMember.id);
+      }
+
+    } catch {}
+
+  });
+
+
+  // 🔹 BACKUP CHECK (every 5 minutes)
+  client.once("clientReady", () => {
+
+    setInterval(async () => {
+
+      try {
+
+        const protectedUsers = await client.protectedUsersDB.find().toArray();
+
+        for (const data of protectedUsers) {
+
+          const userId = data.userId;
+
+          for (const guild of client.guilds.cache.values()) {
+
+            try {
+
+              const member = await guild.members.fetch(userId).catch(() => null);
+              if (!member) continue;
+
+              const isTimedOut =
+                member.isCommunicationDisabled() ||
+                member.communicationDisabledUntil;
+
+              if (!isTimedOut) continue;
+
+              await member.timeout(null);
+
+              // 🔹 MARK FOR LOGGER
+              if (client.markTimeoutRemoved) {
+                client.markTimeoutRemoved(member.id);
+              }
+
+            } catch {}
+
+          }
+
+        }
+
+      } catch {}
+
+    }, 5 * 60 * 1000); // 5 minutes
 
   });
 
