@@ -128,6 +128,26 @@ new SlashCommandBuilder()
   .addStringOption(o => o.setName("name").setDescription("New name"))
   .addBooleanOption(o => o.setName("lock").setDescription("Lock/unlock"))
   .addChannelOption(o => o.setName("channel").setDescription("Channel")),
+
+    new SlashCommandBuilder()
+  .setName("ticket")
+  .setDescription("Send clan ticket panel"),
+
+new SlashCommandBuilder()
+  .setName("addclan")
+  .setDescription("Add clan")
+  .addStringOption(o => o.setName("name").setRequired(true))
+  .addStringOption(o => o.setName("description").setRequired(true))
+  .addStringOption(o => o.setName("details").setRequired(true))
+  .addRoleOption(o => o.setName("leader_role").setRequired(true))
+  .addStringOption(o => o.setName("link").setRequired(false))
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+new SlashCommandBuilder()
+  .setName("removeclan")
+  .setDescription("Remove clan")
+  .addStringOption(o => o.setName("name").setRequired(true))
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
   ];
 
