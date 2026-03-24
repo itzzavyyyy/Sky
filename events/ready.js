@@ -129,24 +129,48 @@ new SlashCommandBuilder()
   .addBooleanOption(o => o.setName("lock").setDescription("Lock/unlock"))
   .addChannelOption(o => o.setName("channel").setDescription("Channel")),
 
-    new SlashCommandBuilder()
+  new SlashCommandBuilder()
   .setName("ticket")
-  .setDescription("Send clan ticket panel"),
+  .setDescription("Send clan application panel"),
 
 new SlashCommandBuilder()
   .setName("addclan")
-  .setDescription("Add clan")
-  .addStringOption(o => o.setName("name").setRequired(true))
-  .addStringOption(o => o.setName("description").setRequired(true))
-  .addStringOption(o => o.setName("details").setRequired(true))
-  .addRoleOption(o => o.setName("leader_role").setRequired(true))
-  .addStringOption(o => o.setName("link").setRequired(false))
+  .setDescription("Add a clan to the system")
+  .addStringOption(o =>
+    o.setName("name")
+      .setDescription("Clan name")
+      .setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName("description")
+      .setDescription("Short one-line description")
+      .setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName("details")
+      .setDescription("Full clan details shown after selection")
+      .setRequired(true)
+  )
+  .addRoleOption(o =>
+    o.setName("leader_role")
+      .setDescription("Clan leader role")
+      .setRequired(true)
+  )
+  .addStringOption(o =>
+    o.setName("link")
+      .setDescription("Clan link (optional)")
+      .setRequired(false)
+  )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
 new SlashCommandBuilder()
   .setName("removeclan")
-  .setDescription("Remove clan")
-  .addStringOption(o => o.setName("name").setRequired(true))
+  .setDescription("Remove a clan from the system")
+  .addStringOption(o =>
+    o.setName("name")
+      .setDescription("Clan name")
+      .setRequired(true)
+  )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
   ];
