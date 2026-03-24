@@ -36,7 +36,7 @@ module.exports = (client) => {
 Click the button to start your application.`
             )
             .setColor(0x000000)
-            .setImage("https://i.imgur.com/yourBanner.png"); // 🔥 PUT REAL IMAGE
+            .setImage("https://cdn.discordapp.com/attachments/1468622520126013450/1470753060249669804/clan_app.jpg?ex=69c3d006&is=69c27e86&hm=89bdefea29c44b1981d6cd16ae91be1d78a086ddf4b463ce62b72d9c07d56762"); // 🔥 PUT REAL IMAGE
 
           const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
