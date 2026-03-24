@@ -11,7 +11,6 @@ module.exports = async (client) => {
   client.commandsDB = db.collection("commands");
   client.protectedUsersDB = db.collection("protectedUsers");
   client.cleanChannelsDB = db.collection("cleanChannels");
-  client.clansDB = db.collection("clans");
 
   console.log("Connected to MongoDB");
 
