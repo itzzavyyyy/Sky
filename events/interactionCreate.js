@@ -38,7 +38,10 @@ client.on("interactionCreate", async interaction => {
 
     await user.roles.add(role);
 
-    interaction.reply(`**${user.user.username} was given ${role}.**`);
+    await interaction.reply({
+    content: `**${user.user.username} was given ${role}.**`,
+    ephemeral: true
+  });
 
   }
 
@@ -50,8 +53,10 @@ client.on("interactionCreate", async interaction => {
 
     await user.roles.remove(role);
 
-    interaction.reply(`**${role} removed from ${user.user.username}.**`);
-
+    await interaction.reply({
+    content: `**${role} removed from ${user.user.username}.**`,
+    ephemeral: true
+  });
   }
 
 
