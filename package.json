@@ -1,7 +1,7 @@
 {
-  "name": "aerialphile",
+  "name": "Infinity Sky",
   "version": "1.0.0",
-  "description": "Aerialphile Discord Bot",
+  "description": "Sky Discord Bot",
   "main": "index.js",
   "dependencies": {
     "discord.js": "^14.14.1",
