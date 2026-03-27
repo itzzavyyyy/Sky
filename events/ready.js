@@ -128,6 +128,25 @@ new SlashCommandBuilder()
   .addStringOption(o => o.setName("name").setDescription("New name"))
   .addBooleanOption(o => o.setName("lock").setDescription("Lock/unlock"))
   .addChannelOption(o => o.setName("channel").setDescription("Channel")),
+
+    new SlashCommandBuilder()
+  .setName("react")
+  .setDescription("Auto react to a user's messages")
+  .addUserOption(option =>
+    option.setName("user").setDescription("User").setRequired(true)
+  )
+  .addStringOption(option =>
+    option.setName("emoji").setDescription("Emoji").setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+new SlashCommandBuilder()
+  .setName("unreact")
+  .setDescription("Stop auto reacting to a user")
+  .addUserOption(option =>
+    option.setName("user").setDescription("User").setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
   ];
 
