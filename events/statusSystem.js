@@ -13,8 +13,7 @@ module.exports = (client) => {
         PLAYING: 0,
         STREAMING: 1,
         LISTENING: 2,
-        WATCHING: 3,
-        COOKING: 4
+        WATCHING: 3
       };
 
       try {
