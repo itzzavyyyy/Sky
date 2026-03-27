@@ -106,6 +106,8 @@ client.on("messageCreate", async message => {
 
     if (time.endsWith("h")) ms = parseInt(time) * 3600000;
 
+    if (time.endsWith("d")) ms = parseInt(time) * 86400000;
+
     message.channel.send(`**Reminder set for ${time}.**`);
 
     setTimeout(() => {
