@@ -103,7 +103,6 @@ client.on("messageCreate", async message => {
     .setFooter({ text: `Total Commands: ${list.length}` });
 
   message.channel.send({ embeds: [embed] });
-}
 
   }
 
