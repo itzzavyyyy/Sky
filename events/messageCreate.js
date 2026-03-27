@@ -81,13 +81,29 @@ client.on("messageCreate", async message => {
 
   if (command === "!cclist") {
 
-    const list = await client.commandsDB.find().toArray();
+  const list = await client.commandsDB.find().toArray();
 
-    if (list.length === 0) return message.channel.send("No commands created.");
+  if (list.length === 0) {
+    return message.channel.send("No commands created.");
+  }
 
-    const names = list.map(c => `!${c.name}`).join(", ");
+  const formatted = list.map(c => {
+    let preview = c.response || "No response";
 
-    message.channel.send(`**Commands:** ${names}`);
+    // trim long responses (clean look)
+    if (preview.length > 70) preview = preview.slice(0, 70) + "...";
+
+    return `**!${c.name}** ${preview}`;
+  });
+
+  const embed = new EmbedBuilder()
+    .setTitle("Custom Command List")
+    .setColor("#87CEEB") // sky blue
+    .setDescription(formatted.join("\n"))
+    .setFooter({ text: `Total Commands: ${list.length}` });
+
+  message.channel.send({ embeds: [embed] });
+}
 
   }
 
