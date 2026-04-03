@@ -15,33 +15,71 @@ module.exports = (client) => {
     const channel = interaction.options.getChannel("channel") || interaction.channel;
     const user = interaction.options.getMember("user");
 
-    // 🔹 /addch
-    if (interaction.commandName === "addch") {
+   // 🔹 /addch
+if (interaction.commandName === "addch") {
 
-      await channel.permissionOverwrites.edit(user, {
-        ViewChannel: true,
-        SendMessages: true,
-        ReadMessageHistory: true
-      });
+  const user = interaction.options.getUser("user");
+  const role = interaction.options.getRole("role");
+  const channel = interaction.options.getChannel("channel");
 
-      return interaction.reply({
-        content: `${user.user.tag} now has access to ${channel}.`,
-        ephemeral: true
-      });
+  if (!user && !role) {
+    return interaction.reply({
+      content: "❌ Provide a user or a role.",
+      ephemeral: true
+    });
+  }
 
-    }
+  if (user && role) {
+    return interaction.reply({
+      content: "❌ Choose either user OR role, not both.",
+      ephemeral: true
+    });
+  }
 
-    // 🔹 /remch
-    if (interaction.commandName === "remch") {
+  const target = user || role;
 
-      await channel.permissionOverwrites.delete(user);
+  await channel.permissionOverwrites.edit(target.id, {
+    ViewChannel: true,
+    SendMessages: true,
+    ReadMessageHistory: true
+  });
 
-      return interaction.reply({
-        content: `${user.user.tag} access removed from ${channel}.`,
-        ephemeral: true
-      });
+  return interaction.reply({
+    content: `✅ ${target} now has access to ${channel}.`,
+    ephemeral: true
+  });
+}
 
-    }
+// 🔹 /remch
+if (interaction.commandName === "remch") {
+
+  const user = interaction.options.getUser("user");
+  const role = interaction.options.getRole("role");
+  const channel = interaction.options.getChannel("channel");
+
+  if (!user && !role) {
+    return interaction.reply({
+      content: "❌ Provide a user or a role.",
+      ephemeral: true
+    });
+  }
+
+  if (user && role) {
+    return interaction.reply({
+      content: "❌ Choose either user OR role, not both.",
+      ephemeral: true
+    });
+  }
+
+  const target = user || role;
+
+  await channel.permissionOverwrites.delete(target.id);
+
+  return interaction.reply({
+    content: `❌ Access removed from ${target} in ${channel}.`,
+    ephemeral: true
+  });
+}
 
     // 🔹 /editch
     if (interaction.commandName === "editch") {
