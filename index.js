@@ -20,5 +20,6 @@ require("./events/cleanSystem")(client);
 require("./events/emiireact")(client);
 require("./events/channelAccessSystem")(client);
 require("./events/commandLogger")(client);
+require("./events/birthdaySystem")(client);
 
 client.login(process.env.TOKEN);
