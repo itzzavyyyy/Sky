@@ -18,25 +18,8 @@ module.exports = (client) => {
    // 🔹 /addch
 if (interaction.commandName === "addch") {
 
-  const user = interaction.options.getUser("user");
-  const role = interaction.options.getRole("role");
+  const target = interaction.options.getMentionable("target");
   const channel = interaction.options.getChannel("channel");
-
-  if (!user && !role) {
-    return interaction.reply({
-      content: "❌ Provide a user or a role.",
-      ephemeral: true
-    });
-  }
-
-  if (user && role) {
-    return interaction.reply({
-      content: "❌ Choose either user OR role, not both.",
-      ephemeral: true
-    });
-  }
-
-  const target = user || role;
 
   await channel.permissionOverwrites.edit(target.id, {
     ViewChannel: true,
@@ -49,29 +32,12 @@ if (interaction.commandName === "addch") {
     ephemeral: true
   });
 }
-
+    
 // 🔹 /remch
 if (interaction.commandName === "remch") {
 
-  const user = interaction.options.getUser("user");
-  const role = interaction.options.getRole("role");
+  const target = interaction.options.getMentionable("target");
   const channel = interaction.options.getChannel("channel");
-
-  if (!user && !role) {
-    return interaction.reply({
-      content: "❌ Provide a user or a role.",
-      ephemeral: true
-    });
-  }
-
-  if (user && role) {
-    return interaction.reply({
-      content: "❌ Choose either user OR role, not both.",
-      ephemeral: true
-    });
-  }
-
-  const target = user || role;
 
   await channel.permissionOverwrites.delete(target.id);
 
