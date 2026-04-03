@@ -12,6 +12,7 @@ module.exports = async (client) => {
   client.protectedUsersDB = db.collection("protectedUsers");
   client.cleanChannelsDB = db.collection("cleanChannels");
   client.reactDB = db.collection("emiireact");
+  client.birthdayDB = db.collection("birthdays");
 
   console.log("Connected to MongoDB");
 
