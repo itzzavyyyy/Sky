@@ -113,28 +113,30 @@ new SlashCommandBuilder()
 new SlashCommandBuilder()
   .setName("addch")
   .setDescription("Give access to a user or role")
-  .addUserOption(o =>
-    o.setName("user").setDescription("User")
-  )
-  .addRoleOption(o =>
-    o.setName("role").setDescription("Role")
+  .addMentionableOption(o =>
+    o.setName("target")
+      .setDescription("User or Role")
+      .setRequired(true)
   )
   .addChannelOption(o =>
-    o.setName("channel").setDescription("Channel").setRequired(true)
+    o.setName("channel")
+      .setDescription("Channel")
+      .setRequired(true)
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
 new SlashCommandBuilder()
   .setName("remch")
   .setDescription("Remove access from a user or role")
-  .addUserOption(o =>
-    o.setName("user").setDescription("User")
-  )
-  .addRoleOption(o =>
-    o.setName("role").setDescription("Role")
+  .addMentionableOption(o =>
+    o.setName("target")
+      .setDescription("User or Role")
+      .setRequired(true)
   )
   .addChannelOption(o =>
-    o.setName("channel").setDescription("Channel").setRequired(true)
+    o.setName("channel")
+      .setDescription("Channel")
+      .setRequired(true)
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
