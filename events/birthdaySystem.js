@@ -108,57 +108,48 @@ module.exports = (client) => {
     }
   });
 
-  // 🎉 BIRTHDAY CHECK SYSTEM (MIDNIGHT IST)
+  // 🎉 BIRTHDAY CHECK SYSTEM 
   client.once("ready", () => {
 
     console.log("🎂 Birthday system loaded");
 
     setInterval(async () => {
 
-      const now = new Date(
-        new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
-      );
+  const now = new Date();
 
-      const hour = now.getHours();
-      const minute = now.getMinutes();
+  const hours = now.getUTCHours();
+  const minutes = now.getUTCMinutes();
 
-      // 🎯 Run ONLY at 12:00 AM IST
-      if (hour !== 0 || minute !== 0) return;
+  if (hours !== 14 || minutes !== 30) return;
 
-      const todayDay = now.getDate();
-      const todayMonth = now.getMonth() + 1;
-      const currentYear = now.getFullYear();
+  const todayDay = now.getUTCDate();
+  const todayMonth = now.getUTCMonth() + 1;
+  const currentYear = now.getUTCFullYear();
 
-      try {
-        const birthdays = await client.birthdayDB.find({
-          day: todayDay,
-          month: todayMonth
-        }).toArray();
+  const birthdays = await client.birthdayDB.find({
+    day: todayDay,
+    month: todayMonth
+  }).toArray();
 
-        for (const bday of birthdays) {
+  for (const bday of birthdays) {
 
-          if (bday.lastWishedYear === currentYear) continue;
+    if (bday.lastWishedYear === currentYear) continue;
 
-          const guild = client.guilds.cache.get(bday.guildId);
-          if (!guild) continue;
+    const guild = client.guilds.cache.get(bday.guildId);
+    if (!guild) continue;
 
-          const channel = guild.channels.cache.get(BDAY_CHANNEL_ID);
-          if (!channel) continue;
+    const channel = guild.channels.cache.get(BDAY_CHANNEL_ID);
+    if (!channel) continue;
 
-          await channel.send(`🎉 Happy Birthday <@${bday.userId}>! 🥳🎂`);
+    await channel.send(`🎉 Happy Birthday <@${bday.userId}>! 🥳`);
 
-          await client.birthdayDB.updateOne(
-            { _id: bday._id },
-            { $set: { lastWishedYear: currentYear } }
-          );
-        }
+    await client.birthdayDB.updateOne(
+      { _id: bday._id },
+      { $set: { lastWishedYear: currentYear } }
+    );
+  }
 
-      } catch (err) {
-        console.error("Birthday Check Error:", err);
-      }
-
-    }, 1000 * 60); // check every minute
-
+}, 1000 * 60);
   });
 
 };
