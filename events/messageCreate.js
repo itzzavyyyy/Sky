@@ -36,7 +36,7 @@ client.on("messageCreate", async message => {
 !remindme <time> <text>`
         },
         {
-          name: "Slash Commands",
+          name: "**Slash Commands**",
           value:
 `- **Admin Only**
 /say - Make the bot say something  
