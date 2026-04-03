@@ -164,7 +164,7 @@ new SlashCommandBuilder()
      new SlashCommandBuilder()
   .setName("seebday")
   .setDescription("View all saved birthdays"),               
-  ),
+  )
     
   ];
 
