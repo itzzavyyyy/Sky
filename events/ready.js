@@ -148,7 +148,7 @@ new SlashCommandBuilder()
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
-    new SlashCommandBuilder()
+new SlashCommandBuilder()
   .setName("setbirthday")
   .setDescription("Set your birthday")
   .addIntegerOption(option =>
@@ -160,13 +160,11 @@ new SlashCommandBuilder()
     option.setName("month")
       .setDescription("Month (1-12)")
       .setRequired(true)
-  ),
-     
-    new SlashCommandBuilder()
+  ), 
+
+new SlashCommandBuilder()
   .setName("seebday")
-  .setDescription("View all saved birthdays"),               
-  )
-    
+  .setDescription("View all saved birthdays")
   ];
 
   await client.application.commands.set(slashCommands);
