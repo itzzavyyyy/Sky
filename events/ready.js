@@ -110,18 +110,34 @@ new SlashCommandBuilder()
   .setDescription("Remove this channel from auto-clean list")
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
-    new SlashCommandBuilder()
+new SlashCommandBuilder()
   .setName("addch")
-  .setDescription("Give user access to a channel")
-  .addUserOption(o => o.setName("user").setDescription("User").setRequired(true))
-  .addChannelOption(o => o.setName("channel").setDescription("Channel")),
+  .setDescription("Give access to a user or role")
+  .addUserOption(o =>
+    o.setName("user").setDescription("User")
+  )
+  .addRoleOption(o =>
+    o.setName("role").setDescription("Role")
+  )
+  .addChannelOption(o =>
+    o.setName("channel").setDescription("Channel").setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
 new SlashCommandBuilder()
   .setName("remch")
-  .setDescription("Remove user access from channel")
-  .addUserOption(o => o.setName("user").setDescription("User").setRequired(true))
-  .addChannelOption(o => o.setName("channel").setDescription("Channel")),
-
+  .setDescription("Remove access from a user or role")
+  .addUserOption(o =>
+    o.setName("user").setDescription("User")
+  )
+  .addRoleOption(o =>
+    o.setName("role").setDescription("Role")
+  )
+  .addChannelOption(o =>
+    o.setName("channel").setDescription("Channel").setRequired(true)
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    
 new SlashCommandBuilder()
   .setName("editch")
   .setDescription("Edit channel")
