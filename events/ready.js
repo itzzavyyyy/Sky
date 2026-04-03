@@ -147,6 +147,20 @@ new SlashCommandBuilder()
     option.setName("user").setDescription("User").setRequired(true)
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    new SlashCommandBuilder()
+  .setName("setbirthday")
+  .setDescription("Set your birthday")
+  .addIntegerOption(option =>
+    option.setName("day")
+      .setDescription("Day (1-31)")
+      .setRequired(true)
+  )
+  .addIntegerOption(option =>
+    option.setName("month")
+      .setDescription("Month (1-12)")
+      .setRequired(true)
+  ),
     
   ];
 
