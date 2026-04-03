@@ -160,8 +160,9 @@ new SlashCommandBuilder()
     option.setName("month")
       .setDescription("Month (1-12)")
       .setRequired(true)
-
-     new SlashCommandBuilder()
+  )
+     
+    new SlashCommandBuilder()
   .setName("seebday")
   .setDescription("View all saved birthdays"),               
   )
