@@ -1,51 +1,130 @@
 module.exports = (client) => {
 
   const BDAY_CHANNEL_ID = "1467026393010536723"; 
-  // 🎂 SLASH COMMAND HANDLER (INSIDE THIS FILE)
+
+  // 📅 Month names
+  const monthNames = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+  ];
+
+  // ✅ Custom validation (Feb max 29)
+  function isValidDate(day, month) {
+    if (month < 1 || month > 12) return false;
+    if (day < 1) return false;
+
+    const daysInMonth = {
+      1: 31, 2: 29, 3: 31, 4: 30,
+      5: 31, 6: 30, 7: 31, 8: 31,
+      9: 30, 10: 31, 11: 30, 12: 31
+    };
+
+    return day <= daysInMonth[month];
+  }
+
+  // 🎂 SLASH COMMAND HANDLER
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-    if (interaction.commandName !== "setbirthday") return;
 
     try {
-      const day = interaction.options.getInteger("day");
-      const month = interaction.options.getInteger("month");
 
-      if (day < 1 || day > 31 || month < 1 || month > 12) {
-        return interaction.reply({ content: "❌ Invalid date!", ephemeral: true });
+      // 🎂 SET BIRTHDAY
+      if (interaction.commandName === "setbirthday") {
+        const day = interaction.options.getInteger("day");
+        const month = interaction.options.getInteger("month");
+
+        if (!isValidDate(day, month)) {
+          return interaction.reply({
+            content: "❌ Invalid date! Example: April has 30 days.",
+            ephemeral: true
+          });
+        }
+
+        await client.birthdayDB.updateOne(
+          {
+            userId: interaction.user.id,
+            guildId: interaction.guild.id
+          },
+          {
+            $set: {
+              day,
+              month,
+              lastWishedYear: null
+            }
+          },
+          { upsert: true }
+        );
+
+        return interaction.reply({
+          content: `🎉 Birthday saved: **${day} ${monthNames[month - 1]}**`,
+          ephemeral: true
+        });
       }
 
-      await client.birthdayDB.updateOne(
-        {
-          userId: interaction.user.id,
-          guildId: interaction.guild.id
-        },
-        {
-          $set: {
-            day,
-            month,
-            lastWishedYear: null
-          }
-        },
-        { upsert: true }
-      );
+      // 📋 SEE BIRTHDAYS
+      if (interaction.commandName === "seebday") {
 
-      interaction.reply(`🎉 Birthday saved: ${day}/${month}`);
+        const birthdays = await client.birthdayDB.find({
+          guildId: interaction.guild.id
+        }).toArray();
+
+        if (!birthdays.length) {
+          return interaction.reply({
+            content: "❌ No birthdays saved in this server.",
+            ephemeral: true
+          });
+        }
+
+        // sort by month → day
+        birthdays.sort((a, b) => {
+          if (a.month === b.month) return a.day - b.day;
+          return a.month - b.month;
+        });
+
+        const list = birthdays.map(b =>
+          `🎂 <@${b.userId}> → ${b.day} ${monthNames[b.month - 1]}`
+        ).join("\n");
+
+        const { EmbedBuilder } = require("discord.js");
+
+        const embed = new EmbedBuilder()
+          .setColor("#87CEEB") // 🌤️ sky blue
+          .setTitle("🎉 Birthday List")
+          .setDescription(list)
+          .setFooter({ text: `${birthdays.length} birthdays saved` });
+
+        return interaction.reply({
+          embeds: [embed],
+          ephemeral: true
+        });
+      }
 
     } catch (err) {
-      console.error("Birthday CMD Error:", err);
+      console.error("Birthday System Error:", err);
       if (!interaction.replied) {
-        interaction.reply({ content: "❌ Error saving birthday", ephemeral: true });
+        interaction.reply({ content: "❌ Error occurred", ephemeral: true });
       }
     }
   });
 
-  // 🎉 BIRTHDAY CHECK SYSTEM
+  // 🎉 BIRTHDAY CHECK SYSTEM (MIDNIGHT IST)
   client.once("ready", () => {
 
     console.log("🎂 Birthday system loaded");
 
     setInterval(async () => {
-      const now = new Date();
+
+      const now = new Date(
+        new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+      );
+
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+
+      // 🎯 Run ONLY at 12:00 AM IST
+      if (hour !== 0 || minute !== 0) return;
+
       const todayDay = now.getDate();
       const todayMonth = now.getMonth() + 1;
       const currentYear = now.getFullYear();
@@ -66,7 +145,7 @@ module.exports = (client) => {
           const channel = guild.channels.cache.get(BDAY_CHANNEL_ID);
           if (!channel) continue;
 
-          await channel.send(`🎉 Happy Birthday <@${bday.userId}>! 🥳`);
+          await channel.send(`🎉 Happy Birthday <@${bday.userId}>! 🥳🎂`);
 
           await client.birthdayDB.updateOne(
             { _id: bday._id },
@@ -75,10 +154,10 @@ module.exports = (client) => {
         }
 
       } catch (err) {
-        console.error("Birthday System Error:", err);
+        console.error("Birthday Check Error:", err);
       }
 
-    }, 1000 * 60 * 60); // every 1 hour
+    }, 1000 * 60); // check every minute
 
   });
 
