@@ -38,7 +38,7 @@ client.on("messageCreate", async message => {
         {
           name: "Slash Commands",
           value:
-`🛠️ **Admin Commands**
+`- **Admin Only**
 /say - Make the bot say something  
 /roleusers - Show users in a role  
 /addrole - Give role to a user  
@@ -46,15 +46,15 @@ client.on("messageCreate", async message => {
 /cleanbot - Add channel to auto-clean list  
 /rembot - Remove channel from auto-clean list  
 
-📂 **Channel Management**
+- **Channel Management**
 /addch - Give user access to a channel  
 /remch - Remove user access from a channel  
 /editch - Edit channel (name/lock)
 
-⚙️ **Utility**
+- **Utility**
 /userinfo - Show user info  
 
-😂 **Fun / Auto**
+- **Fun / Auto**
 /react - Auto react to a user  
 /unreact - Stop auto reacting  
 
