@@ -26,10 +26,9 @@ client.on("messageCreate", async message => {
       .setColor(0x0B3D91)
       .addFields(
    {
-    name: " ** <a:arrowwhite:1470901738050424844> Prefix Commands 🌌** ",
+    name: " ** <a:arrowwhite:1470901738050424844> Prefix Commands (<:StarExclamationMark:1482117449003438221>)** ",
     value:
-`**Prefix (<:StarExclamationMark:1482117449003438221>)**
-<:WhiteArrow:1490409444150874215> !cc <name> <response> → Create custom command  
+`<:WhiteArrow:1490409444150874215> !cc <name> <response> → Create custom command  
 <:WhiteArrow:1490409444150874215> !ce <name> <new response> → Edit existing command  
 <:WhiteArrow:1490409444150874215> !cd <name> → Delete custom command  
 <:WhiteArrow:1490409444150874215> !cclist
