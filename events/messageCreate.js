@@ -47,8 +47,7 @@ client.on("messageCreate", async message => {
 <:Arrow:1490416021851607202> /userinfo → Show user info
 <:Arrow:1490416021851607202> /react → Auto react to user  
 <:Arrow:1490416021851607202> /unreact → Stop auto reacting`
-  }
-      );
+  });
 
     message.channel.send({ embeds: [embed] });
 
