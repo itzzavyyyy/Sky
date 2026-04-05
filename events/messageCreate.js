@@ -25,7 +25,7 @@ client.on("messageCreate", async message => {
       .setTitle("Infinity Sky Commands")
       .setColor(0x0B3D91)
       .addFields(
-   {
+            {
     name: " ** <a:arrowwhite:1470901738050424844> Prefix Commands (<:StarExclamationMark:1482117449003438221>)** ",
     value:
 `<:Arrow:1490416021851607202> !cc <name> <response> → Create custom command  
