@@ -36,18 +36,18 @@ client.on("messageCreate", async message => {
 <:WhiteArrow:1490409444150874215> !remindme <time> <text>
 
 ** <a:arrowwhite:1470901738050424844> Slash Commands (/)**  
-• /say → Make the bot say something  
-• /roleusers → Show users in a role  
-• /addrole → Give role to a user  
-• /removerole → Remove role  
-• /cleanbot → Automatically deletes bot messages in a channel  
-• /rembot → Disable auto-clean for that channel
-• /addch → Give access (user/role)  
-• /remch → Remove access  
-• /editch → Edit channel (name/lock)
-• /userinfo → Show user info
-• /react → Auto react to user  
-• /unreact → Stop auto reacting`
+<:WhiteArrow:1490409444150874215> /say → Make the bot say something  
+<:WhiteArrow:1490409444150874215> /roleusers → Show users in a role  
+<:WhiteArrow:1490409444150874215> /addrole → Give role to a user  
+<:WhiteArrow:1490409444150874215> /removerole → Remove role  
+<:WhiteArrow:1490409444150874215> /cleanbot → Automatically deletes bot messages in a channel  
+<:WhiteArrow:1490409444150874215> /rembot → Disable auto-clean for that channel
+<:WhiteArrow:1490409444150874215> /addch → Give access (user/role)  
+<:WhiteArrow:1490409444150874215> /remch → Remove access  
+<:WhiteArrow:1490409444150874215> /editch → Edit channel (name/lock)
+<:WhiteArrow:1490409444150874215> /userinfo → Show user info
+<:WhiteArrow:1490409444150874215> /react → Auto react to user  
+<:WhiteArrow:1490409444150874215> /unreact → Stop auto reacting`
   },
       );
 
