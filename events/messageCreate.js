@@ -17,21 +17,20 @@ client.on("messageCreate", async message => {
   );
 
 
-  if (command === "!ahelp") {
+if (command === "!ahelp") {
 
-    if (!isAdmin) return;    
+  if (!isAdmin) return;    
 
-    const embed = new EmbedBuilder()
-      .setTitle("Infinity Sky Commands")
-      .setColor(0x0B3D91)
-      .addFields(
-            {
-    name: " ** <a:arrowwhite:1470901738050424844> Prefix Commands (<:StarExclamationMark:1482117449003438221>)** ",
-    value:
-`<:Arrow:1490416021851607202> !cc <name> <response> → Create custom command  
+  const embed = new EmbedBuilder()
+    .setTitle("Infinity Sky Commands")
+    .setColor(0x0B3D91)
+    .addFields({
+      name: " ** <a:arrowwhite:1470901738050424844> Prefix Commands (<:StarExclamationMark:1482117449003438221>)** ",
+      value: `
+<:Arrow:1490416021851607202> !cc <name> <response> → Create custom command  
 <:Arrow:1490416021851607202> !ce <name> <new response> → Edit existing command  
 <:Arrow:1490416021851607202> !cd <name> → Delete custom command  
-<:Arrow:1490416021851607202> !cclist
+<:Arrow:1490416021851607202> !cclist  
 <:Arrow:1490416021851607202> !remindme <time> <text>
 
 ** <a:arrowwhite:1470901738050424844> Slash Commands (/)**  
@@ -40,18 +39,17 @@ client.on("messageCreate", async message => {
 <:Arrow:1490416021851607202> /addrole → Give role to a user  
 <:Arrow:1490416021851607202> /removerole → Remove role  
 <:Arrow:1490416021851607202> /cleanbot → Automatically deletes bot messages in a channel  
-<:Arrow:1490416021851607202> /rembot → Disable auto-clean for that channel
+<:Arrow:1490416021851607202> /rembot → Disable auto-clean for that channel  
 <:Arrow:1490416021851607202> /addch → Give access (user/role)  
 <:Arrow:1490416021851607202> /remch → Remove access  
-<:Arrow:1490416021851607202> /editch → Edit channel (name/lock)
-<:Arrow:1490416021851607202> /userinfo → Show user info
+<:Arrow:1490416021851607202> /editch → Edit channel (name/lock)  
+<:Arrow:1490416021851607202> /userinfo → Show user info  
 <:Arrow:1490416021851607202> /react → Auto react to user  
 <:Arrow:1490416021851607202> /unreact → Stop auto reacting`
-  });
+    });
 
-    message.channel.send({ embeds: [embed] });
-
-  }
+  message.channel.send({ embeds: [embed] });
+}
 
 
   if (command === "!cc") {
