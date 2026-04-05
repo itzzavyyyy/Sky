@@ -28,25 +28,25 @@ client.on("messageCreate", async message => {
    {
     name: " ** <a:arrowwhite:1470901738050424844> Prefix Commands (<:StarExclamationMark:1482117449003438221>)** ",
     value:
-`<:WhiteArrow:1490409444150874215> !cc <name> <response> → Create custom command  
-<:WhiteArrow:1490409444150874215> !ce <name> <new response> → Edit existing command  
-<:WhiteArrow:1490409444150874215> !cd <name> → Delete custom command  
-<:WhiteArrow:1490409444150874215> !cclist
-<:WhiteArrow:1490409444150874215> !remindme <time> <text>
+`<:Arrow:1490416021851607202> !cc <name> <response> → Create custom command  
+<:Arrow:1490416021851607202> !ce <name> <new response> → Edit existing command  
+<:Arrow:1490416021851607202> !cd <name> → Delete custom command  
+<:Arrow:1490416021851607202> !cclist
+<:Arrow:1490416021851607202> !remindme <time> <text>
 
 ** <a:arrowwhite:1470901738050424844> Slash Commands (/)**  
-<:WhiteArrow:1490409444150874215> /say → Make the bot say something  
-<:WhiteArrow:1490409444150874215> /roleusers → Show users in a role  
-<:WhiteArrow:1490409444150874215> /addrole → Give role to a user  
-<:WhiteArrow:1490409444150874215> /removerole → Remove role  
-<:WhiteArrow:1490409444150874215> /cleanbot → Automatically deletes bot messages in a channel  
-<:WhiteArrow:1490409444150874215> /rembot → Disable auto-clean for that channel
-<:WhiteArrow:1490409444150874215> /addch → Give access (user/role)  
-<:WhiteArrow:1490409444150874215> /remch → Remove access  
-<:WhiteArrow:1490409444150874215> /editch → Edit channel (name/lock)
-<:WhiteArrow:1490409444150874215> /userinfo → Show user info
-<:WhiteArrow:1490409444150874215> /react → Auto react to user  
-<:WhiteArrow:1490409444150874215> /unreact → Stop auto reacting`
+<:Arrow:1490416021851607202> /say → Make the bot say something  
+<:Arrow:1490416021851607202> /roleusers → Show users in a role  
+<:Arrow:1490416021851607202> /addrole → Give role to a user  
+<:Arrow:1490416021851607202> /removerole → Remove role  
+<:Arrow:1490416021851607202> /cleanbot → Automatically deletes bot messages in a channel  
+<:Arrow:1490416021851607202> /rembot → Disable auto-clean for that channel
+<:Arrow:1490416021851607202> /addch → Give access (user/role)  
+<:Arrow:1490416021851607202> /remch → Remove access  
+<:Arrow:1490416021851607202> /editch → Edit channel (name/lock)
+<:Arrow:1490416021851607202> /userinfo → Show user info
+<:Arrow:1490416021851607202> /react → Auto react to user  
+<:Arrow:1490416021851607202> /unreact → Stop auto reacting`
   },
       );
 
