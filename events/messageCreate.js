@@ -25,44 +25,55 @@ client.on("messageCreate", async message => {
       .setTitle("Infinity Sky Commands")
       .setColor(0x0B3D91)
       .addFields(
-        {
-          name: "Admin Commands",
-          value:
-`!cc <name> <response>
-!cd <name>`
-        },
-        {
-          name: "User Commands",
-          value:
-`!cclist
-!remindme <time> <text>`
-        },
-        {
-          name: "**Slash Commands**",
-          value:
-`- **Admin Only**
-/say - Make the bot say something  
-/roleusers - Show users in a role  
-/addrole - Give role to a user  
-/removerole - Remove role from a user  
-/cleanbot - Add channel to auto-clean list  
-/rembot - Remove channel from auto-clean list  
+  {
+    name: "⚙️ Admin Commands",
+    value:
+`**Prefix (!)**
+• !cc <name> <response> → Create custom command  
+• !ce <name> <new response> → Edit existing command  
+• !cd <name> → Delete custom command  
 
-- **Channel Management**
-/addch - Give user access to a channel  
-/remch - Remove user access from a channel  
-/editch - Edit channel (name/lock)
+**Slash (/)**  
+• /say → Make the bot say something  
+• /roleusers → Show users in a role  
+• /addrole → Give role to a user  
+• /removerole → Remove role  
+• /cleanbot → Enable auto-clean  
+• /rembot → Disable auto-clean`
+  },
+  {
+    name: "📁 Channel Management",
+    value:
+`**Slash (/)**  
+• /addch → Give access (user/role)  
+• /remch → Remove access  
+• /editch → Edit channel (name/lock)`
+  },
+  {
+    name: "👤 User Commands",
+    value:
+`**Prefix (!)**
+• !cclist → View custom commands  
+• !remindme <time> <text> → Set reminder  
 
-- **Utility**
-/userinfo - Show user info  
-
-- **Fun / Auto**
-/react - Auto react to a user  
-/unreact - Stop auto reacting  
-
-━━━━━━━━━━━━━━━━━━━━
-💡 Use slash commands ( / ) to run these!`
-        }
+**Slash (/)**  
+• /userinfo → Show user info`
+  },
+  {
+    name: "🎉 Fun / Auto",
+    value:
+`**Slash (/)**  
+• /react → Auto react to user  
+• /unreact → Stop auto reacting`
+  },
+  {
+    name: "ℹ️ Usage",
+    value:
+`• Use **!** for prefix commands  
+• Use **/** for slash commands (recommended)  
+━━━━━━━━━━━━━━━━━━  
+💡 Slash commands are faster & easier to use`
+  }
       );
 
     message.channel.send({ embeds: [embed] });
