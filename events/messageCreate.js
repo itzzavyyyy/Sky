@@ -49,11 +49,6 @@ client.on("messageCreate", async message => {
 • /react → Auto react to user  
 • /unreact → Stop auto reacting`
   },
-  {
-`• Use **!** for prefix commands  
-• Use **/** for slash commands  `
-}
-
       );
 
     message.channel.send({ embeds: [embed] });
