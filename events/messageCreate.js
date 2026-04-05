@@ -25,55 +25,35 @@ client.on("messageCreate", async message => {
       .setTitle("Infinity Sky Commands")
       .setColor(0x0B3D91)
       .addFields(
-  {
-    name: "⚙️ Admin Commands",
+   {
+    name: " ** <a:arrowwhite:1470901738050424844> Prefix Commands 🌌** ",
     value:
-`**Prefix (!)**
-• !cc <name> <response> → Create custom command  
-• !ce <name> <new response> → Edit existing command  
-• !cd <name> → Delete custom command  
+`**Prefix (<:StarExclamationMark:1482117449003438221>)**
+<:WhiteArrow:1490409444150874215> !cc <name> <response> → Create custom command  
+<:WhiteArrow:1490409444150874215> !ce <name> <new response> → Edit existing command  
+<:WhiteArrow:1490409444150874215> !cd <name> → Delete custom command  
+<:WhiteArrow:1490409444150874215> !cclist
+<:WhiteArrow:1490409444150874215> !remindme <time> <text>
 
-**Slash (/)**  
+** <a:arrowwhite:1470901738050424844> Slash Commands (/)**  
 • /say → Make the bot say something  
 • /roleusers → Show users in a role  
 • /addrole → Give role to a user  
 • /removerole → Remove role  
-• /cleanbot → Enable auto-clean  
-• /rembot → Disable auto-clean`
-  },
-  {
-    name: "📁 Channel Management",
-    value:
-`**Slash (/)**  
+• /cleanbot → Automatically deletes bot messages in a channel  
+• /rembot → Disable auto-clean for that channel
 • /addch → Give access (user/role)  
 • /remch → Remove access  
-• /editch → Edit channel (name/lock)`
-  },
-  {
-    name: "👤 User Commands",
-    value:
-`**Prefix (!)**
-• !cclist → View custom commands  
-• !remindme <time> <text> → Set reminder  
-
-**Slash (/)**  
-• /userinfo → Show user info`
-  },
-  {
-    name: "🎉 Fun / Auto",
-    value:
-`**Slash (/)**  
+• /editch → Edit channel (name/lock)
+• /userinfo → Show user info
 • /react → Auto react to user  
 • /unreact → Stop auto reacting`
   },
   {
-    name: "ℹ️ Usage",
-    value:
 `• Use **!** for prefix commands  
-• Use **/** for slash commands (recommended)  
-━━━━━━━━━━━━━━━━━━  
-💡 Slash commands are faster & easier to use`
-  }
+• Use **/** for slash commands  `
+}
+
       );
 
     message.channel.send({ embeds: [embed] });
