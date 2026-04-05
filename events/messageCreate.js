@@ -98,6 +98,24 @@ client.on("messageCreate", async message => {
   }
 
 
+  if (command === "!ce") {
+
+  if (!isAdmin) return;
+
+  const name = args[1];
+
+  const newResponse = args.slice(2).join(" ");
+
+  await client.commandsDB.updateOne(
+    { name },
+    { $set: { response: newResponse } }
+  );
+
+  message.channel.send(`**Command !${name} updated.**`);
+
+}
+
+
   if (command === "!cclist") {
 
     if (!isAdmin) return;    
