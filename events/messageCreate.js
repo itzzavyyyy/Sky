@@ -30,7 +30,7 @@ if (command === "!ahelp") {
 <:Arrow:1490416021851607202> !cc <name> <response> → Create custom command  
 <:Arrow:1490416021851607202> !ce <name> <new response> → Edit existing command  
 <:Arrow:1490416021851607202> !cd <name> → Delete custom command  
-<:Arrow:1490416021851607202> !cclist  
+<:Arrow:1490416021851607202> !cclist → View all custom commands
 <:Arrow:1490416021851607202> !remindme <time> <text>
 
 ** <a:arrowwhite:1470901738050424844> Slash Commands (/)**  
