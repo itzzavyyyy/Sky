@@ -19,6 +19,8 @@ client.on("messageCreate", async message => {
 
   if (command === "!ahelp") {
 
+    if (!isAdmin) return;    
+
     const embed = new EmbedBuilder()
       .setTitle("Infinity Sky Commands")
       .setColor(0x0B3D91)
@@ -97,6 +99,8 @@ client.on("messageCreate", async message => {
 
 
   if (command === "!cclist") {
+
+    if (!isAdmin) return;    
 
   const list = await client.commandsDB.find().toArray();
 
